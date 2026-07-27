@@ -74,7 +74,7 @@ class BookingCreate extends Component
 
         session()->flash('success', 'Booking berhasil dibuat! Silakan lakukan pembayaran.');
 
-        return redirect()->route('bookings.index');
+        $this->redirect(route('bookings.index'));
     }
 
     public function render()

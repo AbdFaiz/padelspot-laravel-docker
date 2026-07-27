@@ -90,7 +90,7 @@ class CourtForm extends Component
 
         session()->flash('success', $this->isEdit ? 'Lapangan berhasil diperbarui.' : 'Lapangan berhasil ditambahkan.');
 
-        return redirect()->route('courts.index');
+        $this->redirect(route('courts.index'));
     }
 
     public function render()

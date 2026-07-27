@@ -54,7 +54,7 @@ class PaymentForm extends Component
 
         session()->flash('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
 
-        return redirect()->route('bookings.show', $this->bookingId);
+        $this->redirect(route('bookings.show', $this->bookingId));
     }
 
     public function render()
