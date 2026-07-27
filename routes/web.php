@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Admin\AdminBookingList;
 use App\Livewire\Admin\AdminPaymentList;
 use App\Livewire\Bookings\BookingCreate;
 use App\Livewire\Bookings\BookingList;
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
         return redirect()->route('courts.index')->with('success', 'Lapangan berhasil dihapus.');
     })->name('courts.destroy');
 
+    Route::get('admin/bookings', AdminBookingList::class)->name('admin.bookings.index');
     Route::get('admin/payments', AdminPaymentList::class)->name('admin.payments.index');
 });
 
