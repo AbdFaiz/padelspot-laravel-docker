@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('court_schedules', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('court_id')->constrained()->cascadeOnDelete();
+            $table->enum('day', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
+            $table->string('open_time', 10);
+            $table->string('close_time', 10);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->unique(['court_id', 'day']);
         });
     }
 

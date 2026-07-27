@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('court_images', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('court_id')->constrained()->cascadeOnDelete();
+            $table->string('image_path');
+            $table->boolean('is_primary')->default(false);
             $table->timestamps();
         });
     }

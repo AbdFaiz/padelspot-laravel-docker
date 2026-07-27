@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('booking_status_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
+            $table->string('old_status', 20);
+            $table->string('new_status', 20);
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
