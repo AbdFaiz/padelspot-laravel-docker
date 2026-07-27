@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -11,24 +11,34 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
+                <flux:sidebar.group :heading="__('Menu')" class="grid">
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="map-pin" :href="route('courts.index')" :current="request()->routeIs('courts.*')" wire:navigate>
+                        {{ __('Lapangan') }}
+                    </flux:sidebar.item>
+
+                    @auth
+                        <flux:sidebar.item icon="calendar" :href="route('bookings.index')" :current="request()->routeIs('bookings.*')" wire:navigate>
+                            {{ __('Booking Saya') }}
+                        </flux:sidebar.item>
+
+                        @if (auth()->user()->isAdmin())
+                            <flux:sidebar.item icon="clipboard-document-check" :href="route('admin.bookings.index')" :current="request()->routeIs('admin.bookings.*')" wire:navigate>
+                                {{ __('Kelola Booking') }}
+                            </flux:sidebar.item>
+
+                            <flux:sidebar.item icon="banknotes" :href="route('admin.payments.index')" :current="request()->routeIs('admin.payments.*')" wire:navigate>
+                                {{ __('Kelola Pembayaran') }}
+                            </flux:sidebar.item>
+                        @endif
+                    @endauth
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
             <flux:spacer />
-
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:sidebar.item>
-            </flux:sidebar.nav>
 
             <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
         </flux:sidebar>
