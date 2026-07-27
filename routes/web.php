@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Bookings\BookingCreate;
+use App\Livewire\Bookings\BookingList;
+use App\Livewire\Bookings\BookingShow;
 use App\Livewire\Courts\CourtForm;
 use App\Livewire\Courts\CourtList;
 use App\Livewire\Courts\CourtShow;
@@ -24,6 +27,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
         return redirect()->route('courts.index')->with('success', 'Lapangan berhasil dihapus.');
     })->name('courts.destroy');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('bookings', BookingList::class)->name('bookings.index');
+    Route::get('bookings/create', BookingCreate::class)->name('bookings.create');
+    Route::get('bookings/{id}', BookingShow::class)->name('bookings.show');
 });
 
 require __DIR__.'/settings.php';
