@@ -12,11 +12,51 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {{-- Filter Bar --}}
+    <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 mb-6">
+        <div class="flex flex-wrap items-end gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Cari</label>
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Nama atau deskripsi..."
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            <div class="w-32">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Harga Min</label>
+                <input type="number" wire:model.live.debounce.500ms="minPrice" placeholder="0" min="0"
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            <div class="w-32">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Harga Max</label>
+                <input type="number" wire:model.live.debounce.500ms="maxPrice" placeholder="∞" min="0"
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            <div class="w-40">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Status</label>
+                <select wire:model.live="statusFilter" class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+                    <option value="">Semua</option>
+                    <option value="available">Tersedia</option>
+                    <option value="maintenance">Maintenance</option>
+                </select>
+            </div>
+            @if ($search !== '' || $minPrice !== null || $maxPrice !== null || $statusFilter !== '')
+                <button wire:click="resetFilters" class="px-3 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-600 rounded-lg">
+                    Reset
+                </button>
+            @endif
+        </div>
+    </div>
+
+    @if ($courts->count())
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($courts as $court)
             <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden">
-                <div class="aspect-video bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center">
-                    <span class="text-4xl">🏸</span>
+                @php $primaryImage = $court->images->where('is_primary', true)->first() ?? $court->images->first(); @endphp
+                <div class="aspect-video bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center overflow-hidden">
+                    @if ($primaryImage)
+                        <img src="{{ Storage::url($primaryImage->image_path) }}" alt="{{ $court->name }}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                    @else
+                        <span class="text-4xl">🏸</span>
+                    @endif
                 </div>
 
                 <div class="p-5">
@@ -67,4 +107,12 @@
             </div>
         @endforeach
     </div>
+    @else
+        <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-12 text-center">
+            <p class="text-zinc-500 mb-4">Tidak ada lapangan ditemukan.</p>
+            @if ($search !== '' || $minPrice !== null || $maxPrice !== null || $statusFilter !== '')
+                <button wire:click="resetFilters" class="text-sm text-green-600 hover:text-green-700">Reset Filter</button>
+            @endif
+        </div>
+    @endif
 </div>

@@ -1,4 +1,4 @@
-<div class="p-6">
+<div class="p-6" x-data="{ activeImage: {{ $court->images->where('is_primary', true)->first()?->id ?? ($court->images->first()?->id ?? 'null')} } }">
     <div class="mb-6">
         <flux:link :href="route('courts.index')" class="text-sm text-zinc-600 hover:text-zinc-900" wire:navigate>
             ← Kembali ke Daftar Lapangan
@@ -9,9 +9,31 @@
         {{-- Main Content --}}
         <div class="lg:col-span-2">
             <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 overflow-hidden">
-                <div class="aspect-video bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center">
-                    <span class="text-6xl">🏸</span>
-                </div>
+                {{-- Image Gallery --}}
+                @if ($court->images->count())
+                    <div class="aspect-video bg-zinc-100 dark:bg-zinc-700 relative overflow-hidden">
+                        @foreach ($court->images as $image)
+                            <img src="{{ Storage::url($image->image_path) }}" alt="{{ $court->name }}"
+                                class="w-full h-full object-cover absolute inset-0 transition-opacity duration-300"
+                                :class="activeImage === {{ $image->id }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
+                        @endforeach
+                    </div>
+                    @if ($court->images->count() > 1)
+                        <div class="flex gap-2 p-3 overflow-x-auto">
+                            @foreach ($court->images as $image)
+                                <button type="button" @click="activeImage = {{ $image->id }}"
+                                    class="shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition"
+                                    :class="activeImage === {{ $image->id }} ? 'border-green-500' : 'border-transparent hover:border-zinc-300'">
+                                    <img src="{{ Storage::url($image->image_path) }}" class="w-full h-full object-cover">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                @else
+                    <div class="aspect-video bg-zinc-100 dark:bg-zinc-700 flex items-center justify-center">
+                        <span class="text-6xl">🏸</span>
+                    </div>
+                @endif
 
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">

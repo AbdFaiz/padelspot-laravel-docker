@@ -4,6 +4,42 @@
         <p class="text-zinc-600 dark:text-zinc-400 mt-1">Kelola semua pemesanan Anda</p>
     </div>
 
+    {{-- Filter Bar --}}
+    <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4 mb-6">
+        <div class="flex flex-wrap items-end gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Cari Lapangan</label>
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Nama lapangan..."
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            <div class="w-40">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Status</label>
+                <select wire:model.live="status" class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+                    <option value="">Semua</option>
+                    <option value="pending">Menunggu</option>
+                    <option value="confirmed">Dikonfirmasi</option>
+                    <option value="completed">Selesai</option>
+                    <option value="cancelled">Dibatalkan</option>
+                </select>
+            </div>
+            <div class="w-40">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Dari Tanggal</label>
+                <input type="date" wire:model.live="dateFrom"
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            <div class="w-40">
+                <label class="block text-xs font-medium text-zinc-500 mb-1">Sampai Tanggal</label>
+                <input type="date" wire:model.live="dateTo"
+                    class="w-full rounded-lg border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 text-sm">
+            </div>
+            @if ($status !== '' || $search !== '' || $dateFrom !== '' || $dateTo !== '')
+                <button wire:click="resetFilters" class="px-3 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-600 rounded-lg">
+                    Reset
+                </button>
+            @endif
+        </div>
+    </div>
+
     @if ($bookings->count())
         <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden">
             <div class="overflow-x-auto">
@@ -49,10 +85,15 @@
         </div>
     @else
         <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-12 text-center">
-            <p class="text-zinc-500 mb-4">Belum ada booking.</p>
-            <flux:link :href="route('courts.index')" variant="primary" wire:navigate>
-                Booking Sekarang
-            </flux:link>
+            @if ($status !== '' || $search !== '' || $dateFrom !== '' || $dateTo !== '')
+                <p class="text-zinc-500 mb-4">Tidak ada booking ditemukan.</p>
+                <button wire:click="resetFilters" class="text-sm text-green-600 hover:text-green-700">Reset Filter</button>
+            @else
+                <p class="text-zinc-500 mb-4">Belum ada booking.</p>
+                <flux:link :href="route('courts.index')" variant="primary" wire:navigate>
+                    Booking Sekarang
+                </flux:link>
+            @endif
         </div>
     @endif
 </div>
