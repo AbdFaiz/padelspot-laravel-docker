@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" {{ $attributes }}>
-    <circle cx="20" cy="21" r="18" fill="currentColor" opacity="0.9"/>
-    <text x="20" y="26" text-anchor="middle" font-size="16" font-weight="bold" fill="white" font-family="sans-serif">PS</text>
+    <rect x="2" y="2" width="36" height="38" rx="10" fill="currentColor" opacity="0.95"/>
+    <text x="20" y="27" text-anchor="middle" font-size="16" font-weight="bold" fill="white" font-family="sans-serif">PS</text>
 </svg>

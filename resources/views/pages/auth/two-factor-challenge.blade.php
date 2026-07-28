@@ -17,10 +17,8 @@
                 },
                 toggleInput() {
                     this.showRecoveryInput = !this.showRecoveryInput;
-
                     this.code = '';
                     this.recovery_code = '';
-
                     $nextTick(() => {
                         this.showRecoveryInput
                             ? this.$refs.recovery_code?.focus()
@@ -29,18 +27,14 @@
                 },
             }"
         >
-            <div x-show="!showRecoveryInput">
-                <x-auth-header
-                    :title="__('Authentication code')"
-                    :description="__('Enter the authentication code provided by your authenticator application.')"
-                />
+            <div x-show="!showRecoveryInput" class="flex flex-col text-center">
+                <flux:heading size="xl">Kode Autentikasi</flux:heading>
+                <flux:subheading>Masukkan kode dari aplikasi autentikator kamu</flux:subheading>
             </div>
 
-            <div x-show="showRecoveryInput">
-                <x-auth-header
-                    :title="__('Recovery code')"
-                    :description="__('Please confirm access to your account by entering one of your emergency recovery codes.')"
-                />
+            <div x-show="showRecoveryInput" class="flex flex-col text-center">
+                <flux:heading size="xl">Kode Pemulihan</flux:heading>
+                <flux:subheading>Masukkan salah satu kode pemulihan darurat</flux:subheading>
             </div>
 
             <form method="POST" action="{{ route('two-factor.login.store') }}">
@@ -88,7 +82,7 @@
                     </flux:button>
                 </div>
 
-                <div class="mt-5 space-x-0.5 text-sm leading-5 text-center">
+                <div class="mt-5 space-x-0.5 text-sm leading-5 text-center text-neutral-600 dark:text-neutral-400">
                     <span class="opacity-50">{{ __('or you can') }}</span>
                     <div class="inline font-medium underline cursor-pointer opacity-80">
                         <span x-show="!showRecoveryInput" @click="toggleInput()">{{ __('login using a recovery code') }}</span>
