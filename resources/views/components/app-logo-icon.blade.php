@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" {{ $attributes }}>
-    <rect x="2" y="2" width="36" height="38" rx="10" fill="currentColor" opacity="0.95"/>
-    <text x="20" y="27" text-anchor="middle" font-size="16" font-weight="bold" fill="white" font-family="sans-serif">PS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 15 58 58" fill="none" {{ $attributes }}>
+    <path
+        d="M71.7633 66.8454C72.4137 59.5019 73.4787 36.7344 63.049 25.9828C58.6169 21.414 52.5515 18.793 46.187 18.6962C39.8225 18.5995 33.6803 21.035 29.1115 25.467C24.5428 29.8989 21.9218 35.9643 21.8251 42.3288C21.7285 48.6933 24.1641 54.8356 28.5961 59.4044C39.0258 70.156 61.8151 69.7832 69.175 69.3562C69.8203 69.2748 70.4216 68.9859 70.8885 68.533C71.3553 68.0802 71.6623 67.4879 71.7633 66.8454Z"
+        stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path
+        d="M54.874 52.0244C60.0273 47.0253 60.1524 38.7951 55.1533 33.6417C50.1542 28.4884 41.924 28.3633 36.7706 33.3624C31.6173 38.3615 31.4922 46.5917 36.4913 51.7451C41.4904 56.8984 49.7206 57.0235 54.874 52.0244Z"
+        stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M33.8781 37.5616C39.3824 39.8846 48.2378 46.6196 39.6246 54.975" stroke="currentColor" stroke-width="4" />
+    <path d="M58.5656 49.1398C53.0613 46.8168 44.2059 40.0818 52.8191 31.7264" stroke="currentColor" stroke-width="4" />
 </svg>

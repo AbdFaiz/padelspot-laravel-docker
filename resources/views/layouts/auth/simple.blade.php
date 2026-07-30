@@ -17,13 +17,7 @@
                 {{-- Brand Logo --}}
                 <a href="{{ route('home') }}" class="flex items-center justify-center gap-3 group" wire:navigate>
                     <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-court-blue text-white">
-                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
-                            <circle cx="7" cy="7" r="2.5" fill="currentColor"/>
-                            <circle cx="17" cy="7" r="2.5" fill="currentColor"/>
-                            <circle cx="7" cy="17" r="2.5" fill="currentColor"/>
-                            <circle cx="17" cy="17" r="2.5" fill="currentColor"/>
-                            <path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
+                        <x-app-logo-icon class="w-6 h-6" />
                     </span>
                     <span class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight font-heading">{{ config('app.name', 'PadelSpot') }}</span>
                 </a>

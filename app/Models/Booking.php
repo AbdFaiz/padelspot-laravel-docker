@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['user_id', 'court_id', 'time_slot_id', 'booking_date', 'status', 'total_price', 'notes'])]
+#[Fillable(['user_id', 'court_id', 'booking_date', 'status', 'total_price', 'notes'])]
 class Booking extends Model
 {
     use HasFactory;
@@ -19,6 +21,7 @@ class Booking extends Model
         return [
             'booking_date' => 'date',
             'total_price' => 'decimal:2',
+            'status' => BookingStatus::class,
         ];
     }
 
@@ -32,9 +35,11 @@ class Booking extends Model
         return $this->belongsTo(Court::class);
     }
 
-    public function timeSlot(): BelongsTo
+    public function timeSlots(): BelongsToMany
     {
-        return $this->belongsTo(TimeSlot::class);
+        return $this->belongsToMany(TimeSlot::class, 'booking_time_slot')
+            ->withPivot('price')
+            ->orderBy('start_time');
     }
 
     public function payment(): HasOne
@@ -44,6 +49,7 @@ class Booking extends Model
 
     public function statusLogs(): HasMany
     {
-        return $this->hasMany(BookingStatusLog::class);
+        return $this->hasMany(BookingStatusLog::class)
+            ->orderByDesc('created_at');
     }
 }

@@ -1,3 +1,5 @@
+@php use App\Enums\PaymentStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
 
     {{-- Page Header --}}
@@ -29,9 +31,9 @@
                                 <td class="px-6 py-4 font-bold text-[var(--color-accent)]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $payment->paymentMethod->name }}</td>
                                 <td class="px-6 py-4">
-                                    @if ($payment->status === 'pending')
+                                    @if ($payment->status === PaymentStatus::Pending)
                                         <span class="badge-pending px-3 py-1 text-xs font-bold rounded-full">Menunggu</span>
-                                    @elseif ($payment->status === 'verified')
+                                    @elseif ($payment->status === PaymentStatus::Verified)
                                         <span class="badge-confirmed px-3 py-1 text-xs font-bold rounded-full">Terverifikasi</span>
                                     @else
                                         <span class="badge-cancelled px-3 py-1 text-xs font-bold rounded-full">Ditolak</span>
@@ -43,7 +45,7 @@
                                             class="text-xs font-bold text-court-blue hover:text-gray-900 dark:hover:text-white transition-colors">
                                             Detail
                                         </a>
-                                        @if ($payment->status === 'pending')
+                                        @if ($payment->status === PaymentStatus::Pending)
                                             <button wire:click="verify({{ $payment->id }})" onclick="return confirm('Verifikasi pembayaran ini?')"
                                                 class="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer">
                                                 Verifikasi

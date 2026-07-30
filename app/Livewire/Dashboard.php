@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Enums\BookingStatus;
+use App\Enums\PaymentStatus;
 use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Payment;
@@ -18,13 +20,13 @@ class Dashboard extends Component
         if ($user->isAdmin()) {
             $stats = [
                 'totalBookings' => Booking::count(),
-                'pendingPayments' => Payment::where('status', 'pending')->count(),
-                'totalRevenue' => Payment::where('status', 'verified')->sum('amount'),
+                'pendingPayments' => Payment::where('status', PaymentStatus::Pending)->count(),
+                'totalRevenue' => Payment::where('status', PaymentStatus::Verified)->sum('amount'),
                 'totalCourts' => Court::count(),
                 'totalUsers' => User::where('role', 'customer')->count(),
             ];
 
-            $recentBookings = Booking::with(['user', 'court', 'timeSlot'])
+            $recentBookings = Booking::with(['user', 'court', 'timeSlots'])
                 ->orderByDesc('created_at')
                 ->limit(10)
                 ->get();
@@ -35,11 +37,13 @@ class Dashboard extends Component
 
         $stats = [
             'totalBookings' => Booking::where('user_id', $user->id)->count(),
-            'activeBookings' => Booking::where('user_id', $user->id)->whereIn('status', ['pending', 'confirmed'])->count(),
-            'completedBookings' => Booking::where('user_id', $user->id)->where('status', 'completed')->count(),
+            'activeBookings' => Booking::where('user_id', $user->id)->whereIn('status', [BookingStatus::Pending, BookingStatus::Confirmed])->count(),
+            'completedBookings' => Booking::where('user_id', $user->id)->where('status', BookingStatus::Completed)->count(),
+            'pendingBookings' => Booking::where('user_id', $user->id)->where('status', BookingStatus::Pending)->count(),
+            'confirmedBookings' => Booking::where('user_id', $user->id)->where('status', BookingStatus::Confirmed)->count(),
         ];
 
-        $recentBookings = Booking::with(['court', 'timeSlot', 'payment.paymentMethod'])
+        $recentBookings = Booking::with(['court', 'timeSlots', 'payment.paymentMethod'])
             ->where('user_id', $user->id)
             ->orderByDesc('booking_date')
             ->orderByDesc('created_at')

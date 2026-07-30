@@ -2,10 +2,13 @@
 
 namespace App\Livewire\Payments;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
+use App\Models\BookingStatusLog;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -34,37 +37,49 @@ class PaymentForm extends Component
 
     public function submit(): void
     {
-        $booking = Booking::findOrFail($this->bookingId);
-
-        abort_unless($booking->user_id === Auth::id(), 403);
-        abort_unless($booking->status === 'pending', 400);
-        abort_unless(! $booking->payment, 400);
+        $booking = $this->authorizePayment();
 
         $this->validate();
 
         $proofPath = $this->proof->store('proofs', 'public');
 
-        Payment::create([
-            'booking_id' => $this->bookingId,
-            'payment_method_id' => $this->paymentMethodId,
-            'amount' => $booking->total_price,
-            'proof_path' => $proofPath,
-            'status' => 'pending',
-        ]);
+        DB::transaction(function () use ($booking, $proofPath) {
+            Payment::create([
+                'booking_id' => $this->bookingId,
+                'payment_method_id' => $this->paymentMethodId,
+                'amount' => $booking->total_price,
+                'proof_path' => $proofPath,
+                'status' => 'pending',
+            ]);
 
-        session()->flash('success', 'Bukti pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+            $oldStatus = $booking->status->value;
+            $booking->update(['status' => BookingStatus::Confirmed]);
+
+            BookingStatusLog::create([
+                'booking_id' => $booking->id,
+                'old_status' => $oldStatus,
+                'new_status' => BookingStatus::Confirmed->value,
+                'notes' => 'Pembayaran diterima, booking otomatis dikonfirmasi.',
+            ]);
+        });
+
+        session()->flash('success', 'Pembayaran berhasil! Booking dikonfirmasi secara otomatis.');
 
         $this->redirect(route('bookings.show', $this->bookingId));
     }
 
-    public function render()
+    private function authorizePayment(): Booking
     {
         $booking = Booking::findOrFail($this->bookingId);
-
         abort_unless($booking->user_id === Auth::id(), 403);
-        abort_unless($booking->status === 'pending', 400);
+        abort_unless($booking->status === BookingStatus::Pending, 400);
         abort_unless(! $booking->payment, 400);
+        return $booking;
+    }
 
+    public function render()
+    {
+        $booking = $this->authorizePayment();
         $paymentMethods = PaymentMethod::where('is_active', true)->get();
 
         return view('livewire.payments.payment-form', compact('booking', 'paymentMethods'))

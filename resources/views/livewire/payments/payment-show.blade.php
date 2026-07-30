@@ -1,3 +1,5 @@
+@php use App\Enums\PaymentStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
     <div class="mb-6">
         @if (auth()->user()->isAdmin())
@@ -28,7 +30,7 @@
                 </div>
                 <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
                     <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Jam</p>
-                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->timeSlot->label }}</p>
+                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->timeSlots->pluck('label')->implode(', ') }}</p>
                 </div>
                 <div class="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/25">
                     <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Jumlah Bayar</p>
@@ -41,9 +43,9 @@
                 <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
                     <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Status</p>
                     <div class="mt-1">
-                        @if ($payment->status === 'pending')
+                        @if ($payment->status === PaymentStatus::Pending)
                             <span class="badge-pending px-2.5 py-1 text-xs font-bold rounded-full inline-block">Menunggu Verifikasi</span>
-                        @elseif ($payment->status === 'verified')
+                        @elseif ($payment->status === PaymentStatus::Verified)
                             <span class="badge-paid px-2.5 py-1 text-xs font-bold rounded-full inline-block">Terverifikasi</span>
                         @else
                             <span class="badge-cancelled px-2.5 py-1 text-xs font-bold rounded-full inline-block">Ditolak</span>

@@ -81,7 +81,7 @@
 
             <div class="flex items-center gap-2 mx-auto">
                 <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-court-blue text-white">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="7" r="2.5" fill="currentColor"/><circle cx="17" cy="7" r="2.5" fill="currentColor"/><circle cx="7" cy="17" r="2.5" fill="currentColor"/><circle cx="17" cy="17" r="2.5" fill="currentColor"/><path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    <x-app-logo-icon class="w-4 h-4" />
                 </span>
                 <span class="font-bold text-gray-900 dark:text-white text-sm font-heading">PadelSpot</span>
             </div>

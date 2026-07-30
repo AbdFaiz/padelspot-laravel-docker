@@ -12,19 +12,11 @@
     @fluxAppearance
 </head>
 <body class="bg-sand text-gray-900 dark:bg-midnight dark:text-slate-100 font-sans antialiased selection:bg-court-blue selection:text-white overflow-x-hidden">
-
-    {{-- ── NAVIGATION ── --}}
     <header class="fixed top-0 inset-x-0 z-50 bg-midnight/70 backdrop-blur-md border-b border-white/10">
         <nav class="max-w-7xl mx-auto py-3.5 px-4 sm:px-8 flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 group shrink-0" wire:navigate>
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-court-blue text-white shadow-lg shadow-court-blue/30">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <circle cx="7" cy="7" r="2.5" fill="currentColor"/>
-                        <circle cx="17" cy="7" r="2.5" fill="currentColor"/>
-                        <circle cx="7" cy="17" r="2.5" fill="currentColor"/>
-                        <circle cx="17" cy="17" r="2.5" fill="currentColor"/>
-                        <path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
+                    <x-app-logo-icon class="w-5 h-5" />
                 </span>
                 <span class="font-bold text-lg tracking-tight text-white font-heading">PadelSpot</span>
             </a>
@@ -60,7 +52,6 @@
             <div class="bg-midnight/95 border border-white/10 rounded-xl p-3 flex flex-col gap-1">
                 <a href="{{ route('home') }}" class="text-white font-semibold px-4 py-2.5 rounded-lg bg-white/10 text-sm">Home</a>
                 <a href="#courts" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">Courts</a>
-                <a href="#features" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">About Us</a>
                 <a href="#membership" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">Membership</a>
                 @guest
                     <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
@@ -154,10 +145,10 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 @php
                     $courtPhotos = [
-                        ['name' => 'Indoor Pro', 'price' => 'Rp 200K', 'desc' => 'Karpet WPT, LED, AC', 'img' => 'https://images.unsplash.com/photo-1767128890583-b3f8dc30bdbc?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
-                        ['name' => 'Panoramic Glass', 'price' => 'Rp 250K', 'desc' => 'Dinding kaca, rooftop view', 'img' => 'https://images.unsplash.com/photo-1709587824751-dd30420f5cf3?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
-                        ['name' => 'Twilight Outdoor', 'price' => 'Rp 180K', 'desc' => 'Bermain di bawah lampu', 'img' => 'https://images.unsplash.com/photo-1781310370796-3f0798074ce0?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
-                        ['name' => 'Premium Glass', 'price' => 'Rp 300K', 'desc' => 'VIP court, 360° kaca', 'img' => 'https://images.unsplash.com/photo-1709587825415-814c2d7cfce7?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => false],
+                        ['name' => 'Indoor Pro', 'price' => 'Rp 200K', 'desc' => 'Karpet WPT, LED, AC', 'img' => '/images/indoor.avif', 'available' => true],
+                        ['name' => 'Panoramic Glass', 'price' => 'Rp 250K', 'desc' => 'Dinding kaca, rooftop view', 'img' => '/images/panoramic.avif', 'available' => true],
+                        ['name' => 'Twilight Outdoor', 'price' => 'Rp 180K', 'desc' => 'Bermain di bawah lampu', 'img' => '/images/outdoor.avif', 'available' => true],
+                        ['name' => 'Premium Glass', 'price' => 'Rp 300K', 'desc' => 'VIP court, 360° kaca', 'img' => '/images/vip.avif', 'available' => false],
                     ];
                 @endphp
                 @foreach ($courtPhotos as $i => $court)
@@ -270,13 +261,7 @@
                 <div>
                     <div class="flex items-center gap-2.5 mb-4">
                         <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-court-blue text-white">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                                <circle cx="7" cy="7" r="2.5" fill="currentColor"/>
-                                <circle cx="17" cy="7" r="2.5" fill="currentColor"/>
-                                <circle cx="7" cy="17" r="2.5" fill="currentColor"/>
-                                <circle cx="17" cy="17" r="2.5" fill="currentColor"/>
-                                <path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-                            </svg>
+                            <x-app-logo-icon class="w-5 h-5" />
                         </span>
                         <span class="font-bold text-lg text-gray-900 dark:text-white font-heading">PadelSpot</span>
                     </div>
@@ -287,7 +272,6 @@
                     <nav class="flex flex-col gap-2.5">
                         <a href="{{ route('home') }}" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Beranda</a>
                         <a href="{{ route('courts.index') }}" wire:navigate class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Lapangan</a>
-                        <a href="#features" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Fitur</a>
                         <a href="#membership" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Membership</a>
                     </nav>
                 </div>

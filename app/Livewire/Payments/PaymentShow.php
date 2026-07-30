@@ -17,7 +17,7 @@ class PaymentShow extends Component
 
     public function render()
     {
-        $payment = Payment::with(['booking.court', 'booking.timeSlot', 'paymentMethod', 'booking.user'])
+        $payment = Payment::with(['booking.court', 'booking.timeSlots', 'paymentMethod', 'booking.user'])
             ->findOrFail($this->paymentId);
 
         abort_unless(

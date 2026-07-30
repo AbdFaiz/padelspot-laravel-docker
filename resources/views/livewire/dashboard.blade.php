@@ -1,3 +1,5 @@
+@php use App\Enums\BookingStatus; use App\Enums\PaymentStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
 
     {{-- ══════════════════════════════════════
@@ -123,13 +125,13 @@
                                     <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->court->name }}</td>
                                     <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->booking_date->format('d M Y') }}</td>
                                     <td class="px-6 py-4">
-                                        @if ($booking->status === 'pending')
+                                        @if ($booking->status === BookingStatus::Pending)
                                             <span class="badge-pending px-3 py-1 text-xs font-bold rounded-full">Menunggu</span>
-                                        @elseif ($booking->status === 'confirmed')
+                                        @elseif ($booking->status === BookingStatus::Confirmed)
                                             <span class="badge-confirmed px-3 py-1 text-xs font-bold rounded-full">Dikonfirmasi</span>
-                                        @elseif ($booking->status === 'cancelled')
+                                        @elseif ($booking->status === BookingStatus::Cancelled)
                                             <span class="badge-cancelled px-3 py-1 text-xs font-bold rounded-full">Dibatalkan</span>
-                                        @elseif ($booking->status === 'completed')
+                                        @elseif ($booking->status === BookingStatus::Completed)
                                             <span class="badge-completed px-3 py-1 text-xs font-bold rounded-full">Selesai</span>
                                         @endif
                                     </td>
@@ -278,20 +280,20 @@
                                 <tr class="table-row-flat">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <span class="w-2 h-2 rounded-full @if($booking->status === 'pending') bg-amber-400 @elseif($booking->status === 'confirmed') bg-emerald-400 @elseif($booking->status === 'cancelled') bg-red-400 @else bg-gray-400 @endif shrink-0"></span>
+                                            <span class="w-2 h-2 rounded-full @if($booking->status === BookingStatus::Pending) bg-amber-400 @elseif($booking->status === BookingStatus::Confirmed) bg-emerald-400 @elseif($booking->status === BookingStatus::Cancelled) bg-red-400 @else bg-gray-400 @endif shrink-0"></span>
                                             <span class="font-semibold text-gray-900 dark:text-white">{{ $booking->court->name }}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->booking_date->format('d M Y') }}</td>
-                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlot->label }}</td>
+                                    <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlots->pluck('label')->implode(', ') }}</td>
                                     <td class="px-6 py-4">
-                                        @if ($booking->status === 'pending')
+                                        @if ($booking->status === BookingStatus::Pending)
                                             <span class="badge-pending px-3 py-1 text-xs font-bold rounded-full">Menunggu</span>
-                                        @elseif ($booking->status === 'confirmed')
+                                        @elseif ($booking->status === BookingStatus::Confirmed)
                                             <span class="badge-confirmed px-3 py-1 text-xs font-bold rounded-full">Dikonfirmasi</span>
-                                        @elseif ($booking->status === 'cancelled')
+                                        @elseif ($booking->status === BookingStatus::Cancelled)
                                             <span class="badge-cancelled px-3 py-1 text-xs font-bold rounded-full">Dibatalkan</span>
-                                        @elseif ($booking->status === 'completed')
+                                        @elseif ($booking->status === BookingStatus::Completed)
                                             <span class="badge-completed px-3 py-1 text-xs font-bold rounded-full">Selesai</span>
                                         @endif
                                     </td>

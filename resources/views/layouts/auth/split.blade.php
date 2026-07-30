@@ -11,8 +11,8 @@
                     <div class="absolute bottom-20 right-10 w-96 h-96 bg-emerald-400 rounded-full blur-[128px]"></div>
                 </div>
                 <a href="{{ route('home') }}" class="relative z-20 flex items-center gap-2 text-lg font-medium text-white" wire:navigate>
-                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600">
-                        <span class="text-white font-bold">PS</span>
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                        <x-app-logo-icon class="w-5 h-5" />
                     </span>
                     PadelSpot
                 </a>
@@ -31,8 +31,8 @@
             <div class="w-full lg:p-8">
                 <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <a href="{{ route('home') }}" class="z-20 flex flex-col items-center gap-2 font-medium lg:hidden" wire:navigate>
-                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 shadow-lg shadow-emerald-500/20">
-                            <span class="text-white font-bold">PS</span>
+                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 shadow-lg shadow-emerald-500/20 text-white">
+                            <x-app-logo-icon class="w-5 h-5" />
                         </span>
                         <span class="text-sm font-semibold text-neutral-900 dark:text-white">PadelSpot</span>
                     </a>

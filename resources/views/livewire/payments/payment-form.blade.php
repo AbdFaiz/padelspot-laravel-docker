@@ -15,7 +15,7 @@
                 <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Total yang harus dibayar</p>
                 <p class="text-3xl font-extrabold text-[var(--color-accent)] font-heading">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mt-1.5">
-                    {{ $booking->court->name }} — {{ $booking->booking_date->format('d M Y') }} {{ $booking->timeSlot->label }}
+                    {{ $booking->court->name }} — {{ $booking->booking_date->format('d M Y') }} {{ $booking->timeSlots->pluck('label')->implode(', ') }}
                 </p>
             </div>
 

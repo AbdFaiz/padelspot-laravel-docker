@@ -1,3 +1,5 @@
+@php use App\Enums\BookingStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
 
     {{-- Page Header --}}
@@ -66,16 +68,16 @@
                             <tr class="table-row-flat">
                                 <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ $booking->court->name }}</td>
                                 <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->booking_date->format('d M Y') }}</td>
-                                <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlot->label }}</td>
+                                <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlots->pluck('label')->implode(', ') }}</td>
                                 <td class="px-6 py-4 font-bold text-[var(--color-accent)]">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4">
-                                    @if ($booking->status === 'pending')
+                                    @if ($booking->status === BookingStatus::Pending)
                                         <span class="badge-pending px-3 py-1 text-xs font-bold rounded-full">Menunggu</span>
-                                    @elseif ($booking->status === 'confirmed')
+                                    @elseif ($booking->status === BookingStatus::Confirmed)
                                         <span class="badge-confirmed px-3 py-1 text-xs font-bold rounded-full">Dikonfirmasi</span>
-                                    @elseif ($booking->status === 'cancelled')
+                                    @elseif ($booking->status === BookingStatus::Cancelled)
                                         <span class="badge-cancelled px-3 py-1 text-xs font-bold rounded-full">Dibatalkan</span>
-                                    @elseif ($booking->status === 'completed')
+                                    @elseif ($booking->status === BookingStatus::Completed)
                                         <span class="badge-completed px-3 py-1 text-xs font-bold rounded-full">Selesai</span>
                                     @endif
                                 </td>

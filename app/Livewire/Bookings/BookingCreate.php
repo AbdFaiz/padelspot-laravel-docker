@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Bookings;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\BookingStatusLog;
 use App\Models\Court;
@@ -22,49 +23,15 @@ class BookingCreate extends Component
 
     public string $notes = '';
 
-    public string $viewMode = 'grid';
-
-    public string $calendarWeekStart = '';
-
-    private ?array $calendarData = null;
-
     public function mount(): void
     {
-        $this->courtId = request()->query('court', 0);
+        $this->courtId = (int) request()->query('court', 0);
         $this->bookingDate = now()->toDateString();
-        $this->calendarWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->toDateString();
     }
 
     public function updatedBookingDate(): void
     {
         $this->selectedSlots = [];
-    }
-
-    public function toggleView(): void
-    {
-        $this->viewMode = $this->viewMode === 'grid' ? 'calendar' : 'grid';
-    }
-
-    public function nextWeek(): void
-    {
-        $this->calendarWeekStart = Carbon::parse($this->calendarWeekStart)->addWeek()->toDateString();
-    }
-
-    public function prevWeek(): void
-    {
-        $this->calendarWeekStart = Carbon::parse($this->calendarWeekStart)->subWeek()->toDateString();
-    }
-
-    public function goToToday(): void
-    {
-        $this->calendarWeekStart = Carbon::now()->startOfWeek(Carbon::MONDAY)->toDateString();
-        $this->bookingDate = now()->toDateString();
-    }
-
-    public function selectCalendarSlot(string $date, int $slotId): void
-    {
-        $this->bookingDate = $date;
-        $this->toggleSlot($slotId);
     }
 
     public function toggleSlot(int $slotId): void
@@ -76,11 +43,6 @@ class BookingCreate extends Component
             $this->selectedSlots = array_unique($this->selectedSlots);
             sort($this->selectedSlots);
         }
-    }
-
-    public function getSelectedSlotsProperty(): array
-    {
-        return $this->selectedSlots;
     }
 
     public function getTotalPriceProperty(): float
@@ -130,7 +92,6 @@ class BookingCreate extends Component
 
         if (! $this->slotOrderValid) {
             session()->flash('error', 'Slot yang dipilih harus berurutan tanpa jeda.');
-
             return;
         }
 
@@ -138,7 +99,6 @@ class BookingCreate extends Component
 
         if (! $schedule || ! $schedule->is_active) {
             session()->flash('error', 'Lapangan tidak beroperasi pada hari ini.');
-
             return;
         }
 
@@ -147,150 +107,70 @@ class BookingCreate extends Component
         foreach ($slots as $slot) {
             if ($slot->start_time < $schedule->open_time || $slot->end_time > $schedule->close_time) {
                 session()->flash('error', 'Slot '.$slot->label.' di luar jam operasional ('.$schedule->open_time.' - '.$schedule->close_time.').');
-
                 return;
             }
         }
 
-        $existingBookings = Booking::where('court_id', $this->courtId)
-            ->where('booking_date', $this->bookingDate)
-            ->whereIn('time_slot_id', $this->selectedSlots)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->pluck('time_slot_id')
+        $existingSlotIds = DB::table('booking_time_slot')
+            ->join('bookings', 'booking_time_slot.booking_id', '=', 'bookings.id')
+            ->where('bookings.court_id', $this->courtId)
+            ->where('bookings.booking_date', $this->bookingDate)
+            ->whereIn('booking_time_slot.time_slot_id', $this->selectedSlots)
+            ->whereIn('bookings.status', [BookingStatus::Pending, BookingStatus::Confirmed])
+            ->pluck('booking_time_slot.time_slot_id')
             ->toArray();
 
-        if (count($existingBookings) > 0) {
-            $bookedSlots = TimeSlot::whereIn('id', $existingBookings)->pluck('label')->implode(', ');
+        if (count($existingSlotIds) > 0) {
+            $bookedSlots = TimeSlot::whereIn('id', $existingSlotIds)->pluck('label')->implode(', ');
             session()->flash('error', 'Slot berikut sudah dipesan: '.$bookedSlots.'. Silakan pilih slot lain.');
-
             return;
         }
 
         $court = Court::findOrFail($this->courtId);
 
-        DB::transaction(function () use ($court, $slots) {
-            foreach ($slots as $slot) {
-                $booking = Booking::create([
-                    'user_id' => Auth::id(),
-                    'court_id' => $this->courtId,
-                    'time_slot_id' => $slot->id,
-                    'booking_date' => $this->bookingDate,
-                    'status' => 'pending',
-                    'total_price' => $court->price_per_hour,
-                    'notes' => $this->notes ?: null,
-                ]);
+        $booking = DB::transaction(function () use ($court, $slots) {
+            $booking = Booking::create([
+                'user_id' => Auth::id(),
+                'court_id' => $this->courtId,
+                'booking_date' => $this->bookingDate,
+                'status' => BookingStatus::Pending,
+                'total_price' => $court->price_per_hour * count($slots),
+                'notes' => $this->notes ?: null,
+            ]);
 
-                BookingStatusLog::create([
+            $pivotData = [];
+            foreach ($slots as $slot) {
+                $pivotData[] = [
                     'booking_id' => $booking->id,
-                    'old_status' => '-',
-                    'new_status' => 'pending',
-                    'notes' => 'Booking dibuat oleh pelanggan.',
-                ]);
+                    'time_slot_id' => $slot->id,
+                    'price' => $court->price_per_hour,
+                ];
             }
+            DB::table('booking_time_slot')->insert($pivotData);
+
+            BookingStatusLog::create([
+                'booking_id' => $booking->id,
+                'old_status' => '-',
+                'new_status' => BookingStatus::Pending->value,
+                'notes' => 'Booking dibuat oleh pelanggan.',
+            ]);
+
+            return $booking;
         });
 
-        $count = count($slots);
         $total = number_format($this->totalPrice, 0, ',', '.');
-        session()->flash('success', "{$count} booking berhasil dibuat! Total: Rp {$total}. Silakan lakukan pembayaran.");
+        session()->flash('success', "Booking berhasil dibuat! Total: Rp {$total}. Silakan lakukan pembayaran.");
 
-        $this->redirect(route('bookings.index'));
+        $this->redirect(route('bookings.show', $booking->id));
     }
 
     private function getScheduleForDate(): ?CourtSchedule
     {
-        $dayName = Carbon::parse($this->bookingDate)->translatedFormat('l');
-
-        $dayMap = [
-            'Senin' => 'monday',
-            'Selasa' => 'tuesday',
-            'Rabu' => 'wednesday',
-            'Kamis' => 'thursday',
-            'Jumat' => 'friday',
-            'Sabtu' => 'saturday',
-            'Minggu' => 'sunday',
-        ];
-
-        $dayKey = $dayMap[$dayName] ?? strtolower($dayName);
+        $dayName = strtolower(Carbon::parse($this->bookingDate)->format('l'));
 
         return CourtSchedule::where('court_id', $this->courtId)
-            ->where('day', $dayKey)
+            ->where('day', $dayName)
             ->first();
-    }
-
-    private function getCalendarData(): array
-    {
-        if ($this->calendarData !== null) {
-            return $this->calendarData;
-        }
-
-        $court = Court::find($this->courtId);
-        if (! $court) {
-            return $this->calendarData = [];
-        }
-
-        $timeSlots = TimeSlot::all()->sortBy('start_time')->values();
-        $weekStart = Carbon::parse($this->calendarWeekStart);
-        $maxDate = Carbon::now()->addDays(14);
-
-        $days = [];
-        for ($i = 0; $i < 7; $i++) {
-            $date = $weekStart->copy()->addDays($i);
-            $dateStr = $date->toDateString();
-
-            if ($date->lt(now()->startOfDay()) || $date->gt($maxDate)) {
-                continue;
-            }
-
-            $dayMap = [
-                1 => 'monday', 2 => 'tuesday', 3 => 'wednesday',
-                4 => 'thursday', 5 => 'friday', 6 => 'saturday', 7 => 'sunday',
-            ];
-            $schedule = CourtSchedule::where('court_id', $this->courtId)
-                ->where('day', $dayMap[$date->dayOfWeekIso])
-                ->first();
-
-            $isOperatingDay = $schedule && $schedule->is_active;
-
-            $bookedSlotIds = Booking::where('court_id', $this->courtId)
-                ->where('booking_date', $dateStr)
-                ->whereIn('status', ['pending', 'confirmed'])
-                ->pluck('time_slot_id')
-                ->toArray();
-
-            $slots = [];
-            foreach ($timeSlots as $slot) {
-                $isBooked = in_array($slot->id, $bookedSlotIds);
-                $isOutsideHours = $isOperatingDay
-                    && ($slot->start_time < $schedule->open_time || $slot->end_time > $schedule->close_time);
-                $isDisabled = $isBooked || $isOutsideHours || ! $isOperatingDay;
-
-                $slots[] = [
-                    'id' => $slot->id,
-                    'label' => $slot->label,
-                    'start_time' => $slot->start_time,
-                    'is_booked' => $isBooked,
-                    'is_outside_hours' => $isOutsideHours,
-                    'is_disabled' => $isDisabled,
-                ];
-            }
-
-            $days[] = [
-                'date' => $dateStr,
-                'day_name' => $date->isoFormat('ddd'),
-                'day_number' => $date->format('d'),
-                'month' => $date->isoFormat('MMM'),
-                'is_today' => $date->isToday(),
-                'is_selected' => $dateStr === $this->bookingDate,
-                'is_past' => $date->lt(now()->startOfDay()),
-                'schedule' => $isOperatingDay ? [
-                    'open' => $schedule->open_time,
-                    'close' => $schedule->close_time,
-                ] : null,
-                'slots' => $slots,
-            ];
-        }
-
-        return $this->calendarData = $days;
     }
 
     public function render()
@@ -299,10 +179,12 @@ class BookingCreate extends Component
         $timeSlots = TimeSlot::all()->sortBy('start_time')->values();
         $maxDate = now()->addDays(14)->toDateString();
 
-        $bookedSlotIds = Booking::where('court_id', $this->courtId)
-            ->where('booking_date', $this->bookingDate)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->pluck('time_slot_id')
+        $bookedSlotIds = DB::table('booking_time_slot')
+            ->join('bookings', 'booking_time_slot.booking_id', '=', 'bookings.id')
+            ->where('bookings.court_id', $this->courtId)
+            ->where('bookings.booking_date', $this->bookingDate)
+            ->whereIn('bookings.status', [BookingStatus::Pending, BookingStatus::Confirmed])
+            ->pluck('booking_time_slot.time_slot_id')
             ->toArray();
 
         $schedule = $this->getScheduleForDate();
@@ -324,11 +206,8 @@ class BookingCreate extends Component
             'close_time' => $schedule->close_time,
         ] : null;
 
-        $calendarData = $this->getCalendarData();
-        $calendarWeekLabel = Carbon::parse($this->calendarWeekStart)->isoFormat('D MMM') . ' - ' . Carbon::parse($this->calendarWeekStart)->addDays(6)->isoFormat('D MMM YYYY');
-
         return view('livewire.bookings.booking-create', compact(
-            'court', 'timeSlots', 'maxDate', 'bookedSlotIds', 'unavailableSlotIds', 'courtSchedule', 'calendarData', 'calendarWeekLabel'
+            'court', 'timeSlots', 'maxDate', 'bookedSlotIds', 'unavailableSlotIds', 'courtSchedule'
         ))->layout('components.layouts.app', ['title' => 'Buat Booking - PadelSpot']);
     }
 }

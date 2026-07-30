@@ -24,11 +24,7 @@ class CourtForm extends Component
 
     public string $status = 'available';
 
-    public array $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-
-    public string $openTime = '08:00';
-
-    public string $closeTime = '22:00';
+    public array $schedules = [];
 
     public bool $isEdit = false;
 
@@ -38,6 +34,16 @@ class CourtForm extends Component
 
     public ?int $primaryImageId = null;
 
+    public array $dayLabels = [
+        'monday' => 'Senin',
+        'tuesday' => 'Selasa',
+        'wednesday' => 'Rabu',
+        'thursday' => 'Kamis',
+        'friday' => 'Jumat',
+        'saturday' => 'Sabtu',
+        'sunday' => 'Minggu',
+    ];
+
     protected function rules(): array
     {
         return [
@@ -45,10 +51,11 @@ class CourtForm extends Component
             'description' => 'nullable|string',
             'pricePerHour' => 'required|numeric|min:0',
             'status' => 'required|in:available,maintenance',
-            'days' => 'required|array|min:1',
-            'days.*' => 'in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
-            'openTime' => 'required|date_format:H:i',
-            'closeTime' => 'required|date_format:H:i|after:openTime',
+            'schedules' => 'required|array',
+            'schedules.*' => 'required|array:open_time,close_time,is_active',
+            'schedules.*.open_time' => 'required|date_format:H:i',
+            'schedules.*.close_time' => 'required|date_format:H:i|after:schedules.*.open_time',
+            'schedules.*.is_active' => 'boolean',
             'newImages' => 'array|max:5',
             'newImages.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
         ];
@@ -56,6 +63,8 @@ class CourtForm extends Component
 
     public function mount(?int $id = null): void
     {
+        $this->schedules = $this->defaultSchedules();
+
         if ($id) {
             $this->courtId = $id;
             $this->isEdit = true;
@@ -65,13 +74,32 @@ class CourtForm extends Component
             $this->description = $court->description ?? '';
             $this->pricePerHour = (float) $court->price_per_hour;
             $this->status = $court->status;
-            $this->days = $court->schedules->pluck('day')->toArray();
-            $this->openTime = $court->schedules->first()?->open_time ?? '08:00';
-            $this->closeTime = $court->schedules->first()?->close_time ?? '22:00';
             $this->existingImages = $court->images->toArray();
             $primary = $court->images->where('is_primary', true)->first();
             $this->primaryImageId = $primary?->id;
+
+            foreach ($court->schedules as $schedule) {
+                $this->schedules[$schedule->day] = [
+                    'open_time' => $schedule->open_time,
+                    'close_time' => $schedule->close_time,
+                    'is_active' => $schedule->is_active,
+                ];
+            }
         }
+    }
+
+    private function defaultSchedules(): array
+    {
+        $defaults = [];
+        foreach ($this->dayLabels as $key => $label) {
+            $isWeekend = in_array($key, ['saturday', 'sunday']);
+            $defaults[$key] = [
+                'open_time' => $isWeekend ? '09:00' : '08:00',
+                'close_time' => $isWeekend ? '23:00' : '22:00',
+                'is_active' => true,
+            ];
+        }
+        return $defaults;
     }
 
     public function addImage(): void
@@ -82,7 +110,6 @@ class CourtForm extends Component
 
         if (count($this->existingImages) + count($this->newImages) > 5) {
             session()->flash('error', 'Maksimal 5 foto per lapangan.');
-
             return;
         }
     }
@@ -118,6 +145,12 @@ class CourtForm extends Component
     {
         $this->validate();
 
+        $hasActiveDay = collect($this->schedules)->contains(fn ($s) => $s['is_active']);
+        if (! $hasActiveDay) {
+            session()->flash('error', 'Minimal satu hari harus aktif.');
+            return;
+        }
+
         DB::transaction(function () {
             $court = Court::updateOrCreate(
                 ['id' => $this->courtId],
@@ -133,14 +166,16 @@ class CourtForm extends Component
                 $court->schedules()->delete();
             }
 
-            foreach ($this->days as $day) {
-                CourtSchedule::create([
-                    'court_id' => $court->id,
-                    'day' => $day,
-                    'open_time' => $this->openTime,
-                    'close_time' => $this->closeTime,
-                    'is_active' => true,
-                ]);
+            foreach ($this->schedules as $day => $data) {
+                if ($data['is_active']) {
+                    CourtSchedule::create([
+                        'court_id' => $court->id,
+                        'day' => $day,
+                        'open_time' => $data['open_time'],
+                        'close_time' => $data['close_time'],
+                        'is_active' => true,
+                    ]);
+                }
             }
 
             $hasExisting = $this->primaryImageId !== null;
@@ -165,8 +200,7 @@ class CourtForm extends Component
             }
 
             if ($this->isEdit) {
-                CourtImage::where('court_id', $court->id)
-                    ->update(['is_primary' => false]);
+                CourtImage::where('court_id', $court->id)->update(['is_primary' => false]);
 
                 if ($this->primaryImageId) {
                     CourtImage::where('id', $this->primaryImageId)
@@ -192,9 +226,7 @@ class CourtForm extends Component
 
     public function render()
     {
-        $days = ['monday' => 'Senin', 'tuesday' => 'Selasa', 'wednesday' => 'Rabu', 'thursday' => 'Kamis', 'friday' => 'Jumat', 'saturday' => 'Sabtu', 'sunday' => 'Minggu'];
-
-        return view('livewire.courts.court-form', compact('days'))
+        return view('livewire.courts.court-form', ['dayLabels' => $this->dayLabels])
             ->layout('components.layouts.app', ['title' => ($this->isEdit ? 'Edit' : 'Tambah').' Lapangan - PadelSpot']);
     }
 }

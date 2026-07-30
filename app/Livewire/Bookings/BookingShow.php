@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Bookings;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use App\Models\BookingStatusLog;
 use Illuminate\Support\Facades\Auth;
@@ -22,17 +23,17 @@ class BookingShow extends Component
         $booking = Booking::findOrFail($this->bookingId);
 
         abort_unless($booking->user_id === Auth::id(), 403);
-        abort_unless(in_array($booking->status, ['pending', 'confirmed']), 400);
+        abort_unless(in_array($booking->status, [BookingStatus::Pending, BookingStatus::Confirmed]), 400);
 
         DB::transaction(function () use ($booking) {
-            $oldStatus = $booking->status;
+            $oldStatus = $booking->status->value;
 
-            $booking->update(['status' => 'cancelled']);
+            $booking->update(['status' => BookingStatus::Cancelled->value]);
 
             BookingStatusLog::create([
                 'booking_id' => $booking->id,
                 'old_status' => $oldStatus,
-                'new_status' => 'cancelled',
+                'new_status' => BookingStatus::Cancelled->value,
                 'notes' => 'Dibatalkan oleh pelanggan.',
             ]);
         });
@@ -42,7 +43,7 @@ class BookingShow extends Component
 
     public function render()
     {
-        $booking = Booking::with(['court', 'timeSlot', 'payment.paymentMethod', 'statusLogs'])
+        $booking = Booking::with(['court', 'timeSlots', 'payment.paymentMethod', 'statusLogs'])
             ->findOrFail($this->bookingId);
 
         abort_unless($booking->user_id === Auth::id(), 403);

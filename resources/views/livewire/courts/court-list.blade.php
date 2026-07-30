@@ -115,7 +115,7 @@
 
                         @if (auth()->check() && auth()->user()->isAdmin())
                             <div class="flex items-center gap-4 mt-4 pt-3 border-t border-gray-200 dark:border-slate-dark">
-                                <a href="{{ route('courts.edit', $court->id) }}" wire:navigate class="text-xs font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white transition-colors">Edit Lapangan</a>
+                                <a href="{{ route('courts.edit', $court->id) }}" wire:navigate class="text-xs font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white transition-colors">Edit</a>
                                 <form method="POST" action="{{ route('courts.destroy', $court->id) }}" onsubmit="return confirm('Yakin hapus lapangan ini?')">
                                     @csrf
                                     @method('DELETE')

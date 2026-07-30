@@ -26,7 +26,7 @@ class BookingList extends Component
 
     public function render()
     {
-        $bookings = Booking::with(['court', 'timeSlot', 'payment.paymentMethod'])
+        $bookings = Booking::with(['court', 'timeSlots', 'payment.paymentMethod'])
             ->where('user_id', Auth::id())
             ->when($this->status !== '', fn ($q) => $q->where('status', $this->status))
             ->when($this->search !== '', fn ($q) => $q->whereHas('court', fn ($cq) => $cq->where('name', 'like', "%{$this->search}%")))

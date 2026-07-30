@@ -1,3 +1,5 @@
+@php use App\Enums\BookingStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
 
     {{-- Page Header --}}
@@ -63,33 +65,33 @@
                             <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ $booking->user->name }}</td>
                             <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->court->name }}</td>
                             <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->booking_date->format('d M Y') }}</td>
-                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlot->label }}</td>
+                            <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ $booking->timeSlots->pluck('label')->implode(', ') }}</td>
                             <td class="px-6 py-4">
-                                @if ($booking->status === 'pending')
+                                                                @if ($booking->status === BookingStatus::Pending)
                                     <span class="badge-pending px-3 py-1 text-xs font-bold rounded-full">Menunggu</span>
-                                @elseif ($booking->status === 'confirmed')
+                                @elseif ($booking->status === BookingStatus::Confirmed)
                                     <span class="badge-confirmed px-3 py-1 text-xs font-bold rounded-full">Dikonfirmasi</span>
-                                @elseif ($booking->status === 'cancelled')
+                                @elseif ($booking->status === BookingStatus::Cancelled)
                                     <span class="badge-cancelled px-3 py-1 text-xs font-bold rounded-full">Dibatalkan</span>
-                                @elseif ($booking->status === 'completed')
+                                @elseif ($booking->status === BookingStatus::Completed)
                                     <span class="badge-completed px-3 py-1 text-xs font-bold rounded-full">Selesai</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex gap-3">
-                                    @if ($booking->status === 'pending')
+                                    @if ($booking->status === BookingStatus::Pending)
                                         <button wire:click="confirm({{ $booking->id }})" onclick="return confirm('Konfirmasi booking ini?')"
                                             class="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer">
                                             Konfirmasi
                                         </button>
                                     @endif
-                                    @if ($booking->status === 'confirmed')
+                                    @if ($booking->status === BookingStatus::Confirmed)
                                         <button wire:click="complete({{ $booking->id }})" onclick="return confirm('Tandai selesai?')"
                                             class="text-xs font-bold text-court-blue hover:text-blue-300 transition-colors cursor-pointer">
                                             Selesai
                                         </button>
                                     @endif
-                                    @if (in_array($booking->status, ['pending', 'confirmed']))
+                                    @if (in_array($booking->status, [BookingStatus::Pending, BookingStatus::Confirmed]))
                                         <button wire:click="reject({{ $booking->id }})" onclick="return confirm('Tolak booking ini?')"
                                             class="text-xs font-bold text-red-400 hover:text-red-300 transition-colors cursor-pointer">
                                             Tolak

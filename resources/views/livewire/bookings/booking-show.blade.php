@@ -1,3 +1,5 @@
+@php use App\Enums\BookingStatus; use App\Enums\PaymentStatus; @endphp
+
 <div class="page-bg p-6 lg:p-8">
 
     {{-- Back Button --}}
@@ -19,13 +21,13 @@
                         <h1 class="text-2xl font-extrabold text-gray-900 dark:text-white font-heading">Detail Pemesanan</h1>
                     </div>
 
-                    @if ($booking->status === 'pending')
+                    @if ($booking->status === BookingStatus::Pending)
                         <span class="badge-pending px-3.5 py-1.5 text-xs font-bold rounded-full">Menunggu Pembayaran</span>
-                    @elseif ($booking->status === 'confirmed')
+                    @elseif ($booking->status === BookingStatus::Confirmed)
                         <span class="badge-confirmed px-3.5 py-1.5 text-xs font-bold rounded-full">✓ Dikonfirmasi</span>
-                    @elseif ($booking->status === 'cancelled')
+                    @elseif ($booking->status === BookingStatus::Cancelled)
                         <span class="badge-cancelled px-3.5 py-1.5 text-xs font-bold rounded-full">Dibatalkan</span>
-                    @elseif ($booking->status === 'completed')
+                    @elseif ($booking->status === BookingStatus::Completed)
                         <span class="badge-completed px-3.5 py-1.5 text-xs font-bold rounded-full">Selesai</span>
                     @endif
                 </div>
@@ -42,7 +44,8 @@
                     </div>
                     <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
                         <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Jam</p>
-                        <p class="font-bold text-gray-900 dark:text-white text-base">{{ $booking->timeSlot->label }}</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-base">{{ $booking->timeSlots->pluck('label')->implode(', ') }}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{{ $booking->timeSlots->count() }} jam</p>
                     </div>
                     <div class="bg-[var(--color-accent)]/10 rounded-xl p-4 border border-[var(--color-accent)]/25">
                         <p class="text-[10px] font-bold text-[var(--color-accent)] uppercase tracking-wider mb-1">Total Harga</p>
@@ -68,46 +71,13 @@
                             </div>
                             <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
                                 <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Status Pembayaran</p>
-                                @if ($booking->payment->status === 'pending')
-                                    <span class="badge-pending px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">Menunggu Verifikasi</span>
-                                @elseif ($booking->payment->status === 'verified')
-                                    <span class="badge-confirmed px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">✓ Terverifikasi</span>
-                                @else
-                                    <span class="badge-cancelled px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">Ditolak</span>
-                                @endif
+                                <span class="badge-confirmed px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">Lunas</span>
                             </div>
-                            @if ($booking->payment->admin_notes)
-                                <div class="col-span-2 bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
-                                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Catatan Admin</p>
-                                    <p class="text-gray-700 dark:text-gray-300 text-sm">{{ $booking->payment->admin_notes }}</p>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 @endif
 
-                {{-- Status Log Timeline --}}
-                <div class="border-t border-gray-200 dark:border-slate-dark pt-6">
-                    <h3 class="font-bold text-gray-900 dark:text-white font-heading text-base mb-4">Riwayat Status</h3>
-                    <div class="space-y-4">
-                        @foreach ($booking->statusLogs->sortByDesc('created_at') as $log)
-                            <div class="flex items-start gap-3">
-                                <div class="w-2.5 h-2.5 rounded-full bg-court-blue mt-1.5 shrink-0 "></div>
-                                <div>
-                                    <p class="text-sm text-gray-900 dark:text-white font-semibold">
-                                        <span class="text-gray-500 dark:text-gray-400">{{ $log->old_status }}</span>
-                                        <span class="text-gray-400 dark:text-gray-500 mx-1.5">→</span>
-                                        <span class="text-court-blue">{{ $log->new_status }}</span>
-                                    </p>
-                                    @if ($log->notes)
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $log->notes }}</p>
-                                    @endif
-                                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{{ $log->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -116,7 +86,7 @@
             <div class="card-flat p-6 sticky top-6 space-y-3">
                 <h3 class="font-bold text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider mb-3">Aksi Booking</h3>
 
-                @if ($booking->status === 'pending' && !$booking->payment)
+                @if ($booking->status === BookingStatus::Pending && !$booking->payment)
                     <a href="{{ route('payments.create', $booking->id) }}" wire:navigate
                         class="w-full bg-[var(--color-accent)] hover:opacity-90 text-white font-bold py-3.5 px-6 rounded-xl transition-all text-center block font-heading text-sm">
                         <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -124,7 +94,7 @@
                     </a>
                 @endif
 
-                @if (in_array($booking->status, ['pending', 'confirmed']))
+                @if (in_array($booking->status, [BookingStatus::Pending, BookingStatus::Confirmed]))
                     <button wire:click="cancel" onclick="return confirm('Yakin ingin membatalkan booking ini?')"
                         class="w-full px-4 py-3 border border-red-500/40 text-red-400 hover:bg-red-500/10 rounded-xl text-center text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
