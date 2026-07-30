@@ -9,7 +9,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-@fonts
+{{-- Fonts are loaded in app.css via Google Fonts @import --}}
 
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance

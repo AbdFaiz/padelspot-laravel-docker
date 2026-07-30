@@ -3,8 +3,8 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-neutral-50 dark:bg-neutral-950">
-        <flux:header container class="border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+    <body class="min-h-screen bg-sand text-gray-900 dark:bg-midnight dark:text-slate-100 font-sans antialiased">
+        <flux:header container class="border-b border-gray-200 dark:border-slate-dark bg-white dark:bg-midnight">
             <flux:sidebar.toggle class="lg:hidden mr-2" icon="bars-2" inset="left" />
 
             <x-app-logo href="{{ route('dashboard') }}" wire:navigate />
@@ -29,7 +29,7 @@
         </flux:header>
 
         <!-- Mobile Menu -->
-        <flux:sidebar collapsible="mobile" sticky class="lg:hidden border-e border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+        <flux:sidebar collapsible="mobile" sticky class="lg:hidden border-e border-gray-200 dark:border-slate-dark bg-white dark:bg-midnight">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />

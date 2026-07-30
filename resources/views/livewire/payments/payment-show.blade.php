@@ -1,70 +1,74 @@
-<div class="p-6">
+<div class="page-bg p-6 lg:p-8">
     <div class="mb-6">
         @if (auth()->user()->isAdmin())
-            <flux:link :href="route('admin.payments.index')" class="text-sm text-zinc-600 hover:text-zinc-900" wire:navigate>
+            <a href="{{ route('admin.payments.index') }}" wire:navigate
+                class="text-sm font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1.5 transition-colors">
                 ← Kembali ke Kelola Pembayaran
-            </flux:link>
+            </a>
         @else
-            <flux:link :href="route('bookings.show', $payment->booking->id)" class="text-sm text-zinc-600 hover:text-zinc-900" wire:navigate>
+            <a href="{{ route('bookings.show', $payment->booking->id) }}" wire:navigate
+                class="text-sm font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1.5 transition-colors">
                 ← Kembali ke Detail Booking
-            </flux:link>
+            </a>
         @endif
     </div>
 
     <div class="max-w-2xl">
-        <h1 class="text-2xl font-bold text-zinc-900 dark:text-white mb-6">Detail Pembayaran</h1>
+        <h1 class="text-2xl font-extrabold text-gray-900 dark:text-white font-heading mb-6">Detail Pembayaran</h1>
 
-        <div class="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+        <div class="card-flat p-6 sm:p-8">
             <div class="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                    <p class="text-sm text-zinc-500">Booking</p>
-                    <p class="font-medium text-zinc-900 dark:text-white">{{ $payment->booking->court->name }}</p>
+                <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Booking</p>
+                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->court->name }}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-zinc-500">Tanggal</p>
-                    <p class="font-medium text-zinc-900 dark:text-white">{{ $payment->booking->booking_date->format('d M Y') }}</p>
+                <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Tanggal</p>
+                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->booking_date->format('d M Y') }}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-zinc-500">Jam</p>
-                    <p class="font-medium text-zinc-900 dark:text-white">{{ $payment->booking->timeSlot->label }}</p>
+                <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Jam</p>
+                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->timeSlot->label }}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-zinc-500">Jumlah Bayar</p>
-                    <p class="font-medium text-green-600">Rp {{ number_format($payment->amount, 0, ',', '.') }}</p>
+                <div class="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/25">
+                    <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Jumlah Bayar</p>
+                    <p class="font-extrabold text-emerald-400 text-lg font-heading mt-1">Rp {{ number_format($payment->amount, 0, ',', '.') }}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-zinc-500">Metode Pembayaran</p>
-                    <p class="font-medium text-zinc-900 dark:text-white">{{ $payment->paymentMethod->name }}</p>
+                <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Metode Pembayaran</p>
+                    <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->paymentMethod->name }}</p>
                 </div>
-                <div>
-                    <p class="text-sm text-zinc-500">Status</p>
-                    @if ($payment->status === 'pending')
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">Menunggu Verifikasi</span>
-                    @elseif ($payment->status === 'verified')
-                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">Terverifikasi</span>
-                    @else
-                        <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">Ditolak</span>
-                    @endif
+                <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Status</p>
+                    <div class="mt-1">
+                        @if ($payment->status === 'pending')
+                            <span class="badge-pending px-2.5 py-1 text-xs font-bold rounded-full inline-block">Menunggu Verifikasi</span>
+                        @elseif ($payment->status === 'verified')
+                            <span class="badge-paid px-2.5 py-1 text-xs font-bold rounded-full inline-block">Terverifikasi</span>
+                        @else
+                            <span class="badge-cancelled px-2.5 py-1 text-xs font-bold rounded-full inline-block">Ditolak</span>
+                        @endif
+                    </div>
                 </div>
                 @if (auth()->user()->isAdmin())
-                    <div>
-                        <p class="text-sm text-zinc-500">Pelanggan</p>
-                        <p class="font-medium text-zinc-900 dark:text-white">{{ $payment->booking->user->name }}</p>
+                    <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Pelanggan</p>
+                        <p class="font-bold text-gray-900 dark:text-white mt-1">{{ $payment->booking->user->name }}</p>
                     </div>
                 @endif
             </div>
 
             @if ($payment->admin_notes)
-                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                    <p class="text-sm font-medium text-red-700 dark:text-red-400">Catatan Admin</p>
-                    <p class="text-sm text-red-600 dark:text-red-300">{{ $payment->admin_notes }}</p>
+                <div class="mb-6 p-4 bg-red-500/10 rounded-xl border border-red-500/25">
+                    <p class="text-xs font-bold text-red-400 uppercase tracking-wider">Catatan Admin</p>
+                    <p class="text-sm text-red-300 mt-1">{{ $payment->admin_notes }}</p>
                 </div>
             @endif
 
             @if ($payment->proof_path)
-                <div>
-                    <p class="text-sm text-zinc-500 mb-2">Bukti Pembayaran</p>
-                    <img src="{{ Storage::url($payment->proof_path) }}" class="max-w-md rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <div class="border-t border-gray-200 dark:border-slate-dark pt-6">
+                    <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3">Bukti Pembayaran</p>
+                    <img src="{{ Storage::url($payment->proof_path) }}" class="max-w-md rounded-xl border border-gray-200 dark:border-slate-dark">
                 </div>
             @endif
         </div>

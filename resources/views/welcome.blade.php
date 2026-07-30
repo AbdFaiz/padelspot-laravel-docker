@@ -1,360 +1,329 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PadelSpot — Main Padel, Mudah Bookingnya</title>
+    <meta name="description" content="PadelSpot — Platform booking lapangan padel terbaik. Pilih lapangan, tentukan jadwal, dan bermain dengan mudah.">
+    <title>PadelSpot — Game On. Padel Your Way.</title>
     <link rel="icon" href="/favicon.ico" sizes="any">
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
     @fluxAppearance
 </head>
-<body class="bg-[#F4F6F9] text-slate-900 font-sans antialiased selection:bg-[#FF6600] selection:text-white">
+<body class="bg-sand text-gray-900 dark:bg-midnight dark:text-slate-100 font-sans antialiased selection:bg-court-blue selection:text-white overflow-x-hidden">
 
-    {{-- Floating Glass Header Navigation --}}
-    <header class="fixed top-4 sm:top-6 inset-x-0 z-50 px-4 sm:px-8 max-w-7xl mx-auto">
-        <nav class="glass-header rounded-full py-2.5 px-4 sm:px-6 flex items-center justify-between w-full shadow-2xl transition-all">
-            {{-- Brand Logo --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group" wire:navigate>
-                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FF6600] text-white shadow-lg shadow-orange-500/40 group-hover:scale-105 transition-transform">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="7" r="3" fill="currentColor"/>
-                        <circle cx="17" cy="7" r="3" fill="currentColor"/>
-                        <circle cx="7" cy="17" r="3" fill="currentColor"/>
-                        <circle cx="17" cy="17" r="3" fill="currentColor"/>
-                        <path d="M10 12H14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    {{-- ── NAVIGATION ── --}}
+    <header class="fixed top-0 inset-x-0 z-50 bg-midnight/70 backdrop-blur-md border-b border-white/10">
+        <nav class="max-w-7xl mx-auto py-3.5 px-4 sm:px-8 flex items-center justify-between">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group shrink-0" wire:navigate>
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-court-blue text-white shadow-lg shadow-court-blue/30">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <circle cx="7" cy="7" r="2.5" fill="currentColor"/>
+                        <circle cx="17" cy="7" r="2.5" fill="currentColor"/>
+                        <circle cx="7" cy="17" r="2.5" fill="currentColor"/>
+                        <circle cx="17" cy="17" r="2.5" fill="currentColor"/>
+                        <path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </span>
-                <span class="font-bold text-xl tracking-tight text-white font-heading">PadelSpot</span>
+                <span class="font-bold text-lg tracking-tight text-white font-heading">PadelSpot</span>
             </a>
 
-            {{-- Nav Links --}}
-            <div class="hidden md:flex items-center gap-1 bg-white/10 p-1 rounded-full border border-white/15">
-                <a href="{{ route('home') }}" class="bg-[#FF6600] text-white font-semibold px-5 py-2 rounded-full text-sm shadow-md transition-all">Home</a>
-                <a href="#features" class="text-white/90 hover:text-white hover:bg-white/15 px-4 py-2 rounded-full text-sm font-medium transition-all">Features</a>
-                <a href="{{ route('courts.index') }}" class="text-white/90 hover:text-white hover:bg-white/15 px-4 py-2 rounded-full text-sm font-medium transition-all" wire:navigate>Courts</a>
-                <a href="#about" class="text-white/90 hover:text-white hover:bg-white/15 px-4 py-2 rounded-full text-sm font-medium transition-all">About Us</a>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="{{ route('home') }}" class="text-white font-semibold px-4 py-1.5 rounded-lg text-sm bg-white/10">Home</a>
+                <a href="#courts" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-1.5 rounded-lg text-sm font-medium transition-all">Courts</a>
+                <a href="#membership" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-1.5 rounded-lg text-sm font-medium transition-all">Membership</a>
             </div>
 
-            {{-- Right CTA / Auth --}}
-            <div class="flex items-center gap-3">
-                <a href="tel:+18005557233" class="hidden sm:flex glass-pill text-white/90 hover:text-white hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium items-center gap-2 transition-all cursor-pointer">
-                    <svg class="w-4 h-4 text-[#FF6600]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 001.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                    </svg>
-                    <span>Contact Us</span>
-                </a>
-
+            <div class="flex items-center gap-2.5 shrink-0">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="bg-[#FF6600] hover:bg-[#E55C00] text-white font-semibold px-5 py-2 rounded-full text-sm shadow-lg shadow-orange-500/30 transition-all" wire:navigate>
+                    <a href="{{ route('dashboard') }}" class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-5 py-2 rounded-xl text-sm font-heading transition-all" wire:navigate>
                         Dashboard
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="glass-pill text-white hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium transition-all" wire:navigate>
+                    <a href="{{ route('login') }}" class="text-white/60 hover:text-white border border-white/20 hover:border-white/40 px-4 py-2 rounded-xl text-sm font-semibold transition-all hidden sm:inline-block" wire:navigate>
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="bg-[#FF6600] hover:bg-[#E55C00] text-white font-semibold px-5 py-2 rounded-full text-sm shadow-lg shadow-orange-500/30 transition-all" wire:navigate>
-                        Daftar
+                    <a href="{{ route('register') }}" class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-5 py-2 rounded-xl text-sm font-heading transition-all" wire:navigate>
+                        Daftar Gratis
                     </a>
                 @endauth
+                <button class="md:hidden text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/10 transition" id="mobile-menu-btn" aria-label="Open menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
             </div>
         </nav>
+
+        <div class="md:hidden hidden max-w-7xl mx-auto px-4 pb-4" id="mobile-menu">
+            <div class="bg-midnight/95 border border-white/10 rounded-xl p-3 flex flex-col gap-1">
+                <a href="{{ route('home') }}" class="text-white font-semibold px-4 py-2.5 rounded-lg bg-white/10 text-sm">Home</a>
+                <a href="#courts" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">Courts</a>
+                <a href="#features" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">About Us</a>
+                <a href="#membership" class="text-white/70 hover:text-white hover:bg-white/10 px-4 py-2.5 rounded-lg text-sm transition-all">Membership</a>
+                @guest
+                    <div class="flex gap-2 pt-2 border-t border-white/10 mt-1">
+                        <a href="{{ route('login') }}" class="flex-1 text-center text-white/70 border border-white/20 px-4 py-2.5 rounded-lg text-sm font-semibold" wire:navigate>Masuk</a>
+                        <a href="{{ route('register') }}" class="flex-1 text-center bg-court-blue text-white px-4 py-2.5 rounded-lg text-sm font-bold" wire:navigate>Daftar</a>
+                    </div>
+                @endguest
+            </div>
+        </div>
     </header>
 
-    {{-- Main Hero Section (Electric Court Blue Base) --}}
-    <section class="relative min-h-screen pt-28 sm:pt-32 pb-20 px-4 sm:px-8 flex items-center justify-center overflow-hidden bg-[#0052CC]">
-        {{-- Background Image & Overlay --}}
+    <section class="relative min-h-screen flex items-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="/images/padel_hero_bg.jpg" alt="Padel Court Background" class="w-full h-full object-cover object-center filter brightness-[0.82] contrast-[1.1] scale-105 transform">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#0052CC]/90 via-[#0052CC]/65 to-[#003B99]/85"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#003B99] via-transparent to-[#0052CC]/50"></div>
-            <div class="absolute top-1/4 left-10 w-96 h-96 bg-[#FF6600]/25 rounded-full blur-[140px] pointer-events-none"></div>
-            <div class="absolute bottom-10 right-10 w-80 h-80 bg-blue-400/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <img src="/images/padel_hero_bg.jpg" alt="Lapangan Padel" class="w-full h-full object-cover object-center" style="filter: brightness(0.65) saturate(1.05);">
+            <div class="absolute inset-0 bg-gradient-to-r from-midnight/80 via-midnight/50 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-midnight/60 via-transparent to-midnight/20"></div>
+            <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-court-blue/20 rounded-full blur-[160px] pointer-events-none"></div>
         </div>
 
-        {{-- Hero Grid Content --}}
-        <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            
-            {{-- Left Column: Visual Storytelling & Copy --}}
-            <div class="lg:col-span-7 text-left space-y-8">
-                <div class="space-y-4">
-                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FF6600]/20 border border-[#FF6600]/40 text-[#FF6600] font-semibold text-xs uppercase tracking-wider backdrop-blur-md">
-                        🏓 Platform Booking Padel No. 1
-                    </span>
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05] drop-shadow-lg font-heading">
-                        Game On.<br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-[#FF6600]">Padel Your Way.</span>
-                    </h1>
-                    <p class="text-lg sm:text-xl text-white/90 max-w-xl leading-relaxed drop-shadow-sm font-normal">
-                        Lapangan modern, desain dinamis, dan sistem pemesanan tercepat yang dibangun khusus untuk pecinta olahraga padel.
-                    </p>
-                </div>
+        <div class="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-8 pt-28 pb-20">
+            <div class="max-w-2xl animate-float-up">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-court-blue/25 border border-court-blue/40 text-blue-200 font-semibold text-xs uppercase tracking-wider mb-6">
+                    <span class="w-1.5 h-1.5 rounded-full bg-ball-yellow animate-pulse"></span>
+                    Platform Booking Padel No.1
+                </span>
 
-                {{-- Action Bar: Explore Facilities CTA + Active Members Badge --}}
-                <div class="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
-                    <a href="{{ route('courts.index') }}" class="bg-[#FF6600] hover:bg-[#E55C00] text-white rounded-full px-7 py-4 font-bold flex items-center gap-3 shadow-xl shadow-orange-600/40 group hover:scale-105 transition-all text-base font-heading" wire:navigate>
-                        <span class="w-8 h-8 rounded-full bg-white text-[#FF6600] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-                            <svg class="w-4 h-4 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </span>
-                        <span>Mulai Booking Lapangan</span>
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.04] font-heading mb-6">
+                    Game On.<br>
+                    <span class="text-ball-yellow">Padel Your Way.</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-white/70 max-w-lg leading-relaxed mb-8">
+                    Modern courts, panoramic glass walls, and premium turf — book your favorite court in seconds and play at your best.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="{{ route('courts.index') }}" wire:navigate
+                        class="inline-flex items-center gap-2.5 bg-court-blue hover:bg-court-blue-dark text-white font-bold px-7 py-3.5 rounded-xl text-base font-heading transition-all shadow-xl shadow-court-blue/30">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        Booking Sekarang
                     </a>
 
-                    {{-- Members Avatar Stack Badge --}}
-                    <div class="glass-pill rounded-full py-2.5 px-4 flex items-center gap-3 shadow-lg">
-                        <div class="flex -space-x-2 overflow-hidden">
-                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white/40 object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Member 1">
-                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white/40 object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Member 2">
-                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white/40 object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="Member 3">
-                            <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white/40 object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Member 4">
-                        </div>
-                        <span class="text-sm font-semibold text-white/95">367+ Pemain Aktif</span>
+                    <a href="#courts"
+                        class="inline-flex items-center gap-2 text-white/70 hover:text-white border border-white/20 hover:border-white/40 px-6 py-3.5 rounded-xl text-sm font-semibold transition-all">
+                        Lihat Lapangan
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-6 mt-10 pt-8 border-t border-white/10">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-extrabold text-white font-heading">12+</span>
+                        <span class="text-xs text-white/50">Lapangan<br>Premium</span>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-extrabold text-white font-heading">367+</span>
+                        <span class="text-xs text-white/50">Member<br>Aktif</span>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl font-extrabold text-white font-heading">4.8</span>
+                        <span class="text-xs text-white/50">Rating<br>Ulasan</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            {{-- Right Column: Interactive Glassmorphism Booking Card --}}
-            <div class="lg:col-span-5 w-full flex justify-center lg:justify-end">
-                <div class="glass-card rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden backdrop-blur-2xl shadow-2xl border border-white/25 max-w-md w-full transition-all hover:border-[#FF6600]/50">
-                    <h2 class="text-2xl font-bold tracking-tight text-white mb-6 font-heading">
-                        Cari Lapangan Padel
-                    </h2>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+            <span class="text-xs text-white/40 uppercase tracking-widest">Scroll</span>
+            <div class="w-px h-8 bg-gradient-to-b from-white/30 to-transparent"></div>
+        </div>
+    </section>
 
-                    <form action="{{ route('courts.index') }}" method="GET" class="space-y-4" id="heroBookingForm">
-                        {{-- Location Field --}}
-                        <div>
-                            <label class="text-xs font-semibold text-white/90 uppercase tracking-wider mb-1.5 block">Lokasi Padel</label>
-                            <div class="relative">
-                                <select name="location" class="glass-input rounded-xl px-4 py-3 text-sm w-full font-medium appearance-none cursor-pointer pr-10">
-                                    <option value="central">PadelSpot Central Arena</option>
-                                    <option value="west-club">PadelSpot West Club</option>
-                                    <option value="south-park">PadelSpot South Park</option>
-                                </select>
-                                <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-white/70">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
+    <section id="courts" class="py-24 bg-white dark:bg-midnight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-court-blue-light dark:bg-court-blue/20 text-court-blue dark:text-ball-yellow font-bold text-xs uppercase tracking-wider border border-court-blue/20 dark:border-ball-yellow/30 mb-4">
+                        Our Courts
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white font-heading">Pilih Lapangan Favoritmu</h2>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2 text-base">Dari indoor premium hingga outdoor panoramic, semua siap untuk permainanmu.</p>
+                </div>
+                <a href="{{ route('courts.index') }}" wire:navigate class="hidden sm:flex items-center gap-2 text-court-blue hover:text-court-blue-dark dark:hover:text-ball-yellow font-bold text-sm transition-colors">
+                    Lihat Semua Lapangan
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                @php
+                    $courtPhotos = [
+                        ['name' => 'Indoor Pro', 'price' => 'Rp 200K', 'desc' => 'Karpet WPT, LED, AC', 'img' => 'https://images.unsplash.com/photo-1767128890583-b3f8dc30bdbc?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
+                        ['name' => 'Panoramic Glass', 'price' => 'Rp 250K', 'desc' => 'Dinding kaca, rooftop view', 'img' => 'https://images.unsplash.com/photo-1709587824751-dd30420f5cf3?q=80&w=1031&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
+                        ['name' => 'Twilight Outdoor', 'price' => 'Rp 180K', 'desc' => 'Bermain di bawah lampu', 'img' => 'https://images.unsplash.com/photo-1781310370796-3f0798074ce0?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => true],
+                        ['name' => 'Premium Glass', 'price' => 'Rp 300K', 'desc' => 'VIP court, 360° kaca', 'img' => 'https://images.unsplash.com/photo-1709587825415-814c2d7cfce7?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'available' => false],
+                    ];
+                @endphp
+                @foreach ($courtPhotos as $i => $court)
+                    <a href="{{ route('courts.index') }}" wire:navigate class="group relative rounded-2xl overflow-hidden bg-gray-100 dark:bg-slate-dark aspect-[4/5] block">
+                        <img src="{{ $court['img'] }}" alt="{{ $court['name'] }}" class="w-full h-full object-cover transition-all duration-700 {{ $court['available'] ? 'group-hover:scale-105' : 'blur-md grayscale group-hover:blur-sm group-hover:grayscale-[50%]' }}" loading="{{ $i < 2 ? 'eager' : 'lazy' }}">
+                        @if (!$court['available'])
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                            <div class="w-16 h-16 rounded-2xl bg-black/30 backdrop-blur-md border border-white/20 text-white/70 flex items-center justify-center">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                             </div>
                         </div>
-
-                        {{-- Court Type Field --}}
-                        <div>
-                            <label class="text-xs font-semibold text-white/90 uppercase tracking-wider mb-1.5 block">Tipe Lapangan</label>
-                            <div class="relative">
-                                <select name="type" id="courtTypeSelect" class="glass-input rounded-xl px-4 py-3 text-sm w-full font-medium appearance-none cursor-pointer pr-10">
-                                    <option value="all">Semua Tipe (Indoor, Outdoor, Pro)</option>
-                                    <option value="indoor">Indoor Panoramic Glass Court</option>
-                                    <option value="outdoor">Outdoor Sunset Court</option>
-                                    <option value="pro">Pro Championship Hard Court</option>
-                                </select>
-                                <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-white/70">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </div>
+                        @endif
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-5">
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="font-bold text-white text-lg font-heading">{{ $court['name'] }}</h3>
+                                @if ($court['available'])
+                                    <span class="text-xs font-bold text-emerald-400 bg-emerald-500/20 px-2.5 py-0.5 rounded-full">Tersedia</span>
+                                @else
+                                    <span class="text-xs font-bold text-amber-400 bg-amber-500/20 px-2.5 py-0.5 rounded-full">Coming Soon</span>
+                                @endif
                             </div>
+                            <p class="text-sm text-white/60">{{ $court['desc'] }}</p>
+                            <p class="text-xl font-extrabold text-white mt-2 font-heading">{{ $court['price'] }} <span class="text-sm font-normal text-white/40">/jam</span></p>
                         </div>
-
-                        {{-- Date & Time Fields (2-Columns) --}}
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="text-xs font-semibold text-white/90 uppercase tracking-wider mb-1.5 block">Tanggal</label>
-                                <div class="relative">
-                                    <input type="date" name="date" value="{{ date('Y-m-d') }}" class="glass-input rounded-xl px-3 py-3 text-sm w-full font-medium cursor-pointer pr-9 text-white">
-                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/70">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-xs font-semibold text-white/90 uppercase tracking-wider mb-1.5 block">Jam</label>
-                                <div class="relative">
-                                    <select name="time" class="glass-input rounded-xl px-3 py-3 text-sm w-full font-medium appearance-none cursor-pointer pr-8">
-                                        <option value="16:00">16:00 WIB</option>
-                                        <option value="17:00">17:00 WIB</option>
-                                        <option value="18:00" selected>18:00 WIB</option>
-                                        <option value="19:00">19:00 WIB</option>
-                                        <option value="20:00">20:00 WIB</option>
-                                    </select>
-                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/70">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/20 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         </div>
+                    </a>
+                @endforeach
+            </div>
 
-                        {{-- Duration Field --}}
-                        <div>
-                            <label class="text-xs font-semibold text-white/90 uppercase tracking-wider mb-1.5 block">Durasi</label>
-                            <div class="relative">
-                                <select name="duration" id="durationSelect" class="glass-input rounded-xl px-4 py-3 text-sm w-full font-medium appearance-none cursor-pointer pr-10">
-                                    <option value="60">60 Menit (1 Jam)</option>
-                                    <option value="90">90 Menit (1.5 Jam)</option>
-                                    <option value="120">120 Menit (2 Jam)</option>
-                                </select>
-                                <div class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-white/70">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                            </div>
+            <div class="mt-6 text-center sm:hidden">
+                <a href="{{ route('courts.index') }}" wire:navigate class="inline-flex items-center gap-2 text-court-blue hover:text-court-blue-dark dark:hover:text-ball-yellow font-bold text-sm transition-colors">
+                    Lihat Semua Lapangan
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-sand dark:bg-midnight border-t border-gray-200 dark:border-slate-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8">
+            <div class="text-center mb-16">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-court-blue-light dark:bg-court-blue/20 text-court-blue dark:text-ball-yellow font-bold text-xs uppercase tracking-wider border border-court-blue/20 dark:border-ball-yellow/30 mb-4">
+                    Cara Booking
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white font-heading">3 Langkah Mudah Main Padel</h2>
+                <p class="text-gray-500 dark:text-gray-400 max-w-lg mx-auto mt-2 text-base">Tanpa ribet, langsung bermain.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                @php
+                    $steps = [
+                        ['num' => '01', 'title' => 'Pilih Lapangan', 'desc' => 'Lihat galeri lapangan, bandingkan harga, dan pilih yang paling cocok untuk gaya bermainmu.', 'icon' => 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'],
+                        ['num' => '02', 'title' => 'Pilih Jadwal', 'desc' => 'Tentukan tanggal dan jam main. Bisa booking 1-3 jam berturut-turut sesuai kebutuhan.', 'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+                        ['num' => '03', 'title' => 'Bayar & Main', 'desc' => 'Upload bukti pembayaran, dapatkan konfirmasi instan, dan datang untuk bermain!', 'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
+                    ];
+                @endphp
+                @foreach ($steps as $i => $step)
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-court-blue text-white flex items-center justify-center mx-auto mb-5">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $step['icon'] }}"/></svg>
                         </div>
+                        <div class="text-5xl font-black text-court-blue/15 dark:text-court-blue/30 font-heading -mt-12 mb-4">{{ $step['num'] }}</div>
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white font-heading mb-2">{{ $step['title'] }}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-xs mx-auto">{{ $step['desc'] }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 
-                        {{-- Dynamic Rate Preview Badge --}}
-                        <div class="pt-1 pb-1 flex items-center justify-between text-xs text-white/90 font-medium">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span id="availabilityBadge">4 Lapangan Tersedia</span>
-                            </span>
-                            <span id="priceBadge" class="font-bold text-[#FF6600] text-sm">Rp 150.000 / jam</span>
-                        </div>
+    <section id="membership" class="relative py-24 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1800&q=80" alt="" class="w-full h-full object-cover" style="filter: brightness(0.35) saturate(1.1);">
+            <div class="absolute inset-0 bg-gradient-to-r from-midnight/85 via-midnight/70 to-midnight/85"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-court-blue/15 rounded-full blur-[180px] pointer-events-none"></div>
+        </div>
 
-                        {{-- Submit Button (Neon Orange CTA) --}}
-                        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#E55C00] active:scale-[0.98] text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-orange-600/40 hover:shadow-orange-500/60 transition-all text-center cursor-pointer flex items-center justify-center gap-2 font-heading text-base">
-                            <span>Pilih Lapangan & Lanjut</span>
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 text-center">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-ball-yellow/20 border border-ball-yellow/30 text-ball-yellow font-bold text-xs uppercase tracking-wider mb-5">
+                Bergabung Sekarang
+            </span>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-heading mb-4">Siap untuk Main?</h2>
+            <p class="text-white/60 max-w-lg mx-auto text-base mb-8">Daftar gratis dan mulai booking lapangan padel favoritmu dalam hitungan detik.</p>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                @guest
+                    <a href="{{ route('register') }}" wire:navigate class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-8 py-4 rounded-xl text-base font-heading transition-all shadow-xl shadow-court-blue/30">
+                        Daftar Gratis
+                    </a>
+                    <a href="{{ route('courts.index') }}" wire:navigate class="text-white/70 hover:text-white border border-white/20 hover:border-white/40 px-8 py-4 rounded-xl text-base font-semibold transition-all">
+                        Lihat Lapangan
+                    </a>
+                @else
+                    <a href="{{ route('bookings.create') }}" wire:navigate class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-8 py-4 rounded-xl text-base font-heading transition-all">
+                        Booking Sekarang
+                    </a>
+                @endguest
+            </div>
+        </div>
+    </section>
+
+    {{-- ══════════════════════════════════════
+         FOOTER
+    ══════════════════════════════════════ --}}
+    <footer class="border-t border-gray-200 dark:border-slate-dark bg-white dark:bg-midnight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
+                <div>
+                    <div class="flex items-center gap-2.5 mb-4">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-court-blue text-white">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                                <circle cx="7" cy="7" r="2.5" fill="currentColor"/>
+                                <circle cx="17" cy="7" r="2.5" fill="currentColor"/>
+                                <circle cx="7" cy="17" r="2.5" fill="currentColor"/>
+                                <circle cx="17" cy="17" r="2.5" fill="currentColor"/>
+                                <path d="M10 12H14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
                             </svg>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    {{-- Stats Section (Light Gray Section Divider) --}}
-    <section class="relative -mt-16 z-20 px-6 pb-16">
-        <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg flex items-center gap-5">
-                <div class="w-14 h-14 rounded-2xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center font-bold text-2xl">
-                    3+
+                        </span>
+                        <span class="font-bold text-lg text-gray-900 dark:text-white font-heading">PadelSpot</span>
+                    </div>
+                    <p class="text-sm text-gray-400 dark:text-gray-500 leading-relaxed max-w-xs">Platform booking lapangan padel terbaik dengan sistem pemesanan online yang cepat, aman, dan terpercaya.</p>
                 </div>
                 <div>
-                    <div class="text-2xl font-bold text-slate-900 font-heading">Lapangan Premium</div>
-                    <div class="text-sm text-slate-600">Indoor & Outdoor View</div>
-                </div>
-            </div>
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg flex items-center gap-5">
-                <div class="w-14 h-14 rounded-2xl bg-[#FF6600]/10 text-[#FF6600] flex items-center justify-center font-bold text-2xl">
-                    14
-                </div>
-                <div>
-                    <div class="text-2xl font-bold text-slate-900 font-heading">Jam Operasional</div>
-                    <div class="text-sm text-slate-600">08:00 - 22:00 WIB</div>
-                </div>
-            </div>
-            <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg flex items-center gap-5">
-                <div class="w-14 h-14 rounded-2xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center font-bold text-2xl">
-                    24/7
+                    <h4 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Navigasi</h4>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="{{ route('home') }}" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Beranda</a>
+                        <a href="{{ route('courts.index') }}" wire:navigate class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Lapangan</a>
+                        <a href="#features" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Fitur</a>
+                        <a href="#membership" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors">Membership</a>
+                    </nav>
                 </div>
                 <div>
-                    <div class="text-2xl font-bold text-slate-900 font-heading">Instant Booking</div>
-                    <div class="text-sm text-slate-600">Sistem Otomatis & Aman</div>
+                    <h4 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">Kontak</h4>
+                    <nav class="flex flex-col gap-2.5">
+                        <a href="tel:+6281234567890" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                            +62 812-3456-7890
+                        </a>
+                        <a href="mailto:info@padelspot.com" class="text-sm text-gray-400 dark:text-gray-500 hover:text-court-blue dark:hover:text-ball-yellow transition-colors flex items-center gap-2">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            info@padelspot.com
+                        </a>
+                    </nav>
                 </div>
             </div>
-        </div>
-    </section>
-
-    {{-- Features Section (Light Gray Background) --}}
-    <section id="features" class="py-20 px-6 bg-[#F4F6F9]">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16 space-y-3">
-                <span class="text-xs font-bold text-[#FF6600] uppercase tracking-wider">Keunggulan Platform</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading">
-                    Kenapa Memilih PadelSpot?
-                </h2>
-                <p class="text-slate-600 max-w-xl mx-auto text-base">
-                    Kemudahan booking, fleksibilitas jadwal, dan kenyamanan bermain dalam satu platform.
-                </p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center mb-4 group-hover:bg-[#FF6600] group-hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2 font-heading">Booking Cepat</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">Pilih jadwal dan waktu bermain secara gratis & transparan dalam beberapa klik.</p>
+            <div class="border-t border-gray-200 dark:border-slate-dark pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-sm text-gray-400 dark:text-gray-500">&copy; {{ date('Y') }} PadelSpot. All rights reserved.</div>
+                <div class="flex items-center gap-4 text-sm text-gray-400 dark:text-gray-500">
+                    <span class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-default">Privacy Policy</span>
+                    <span class="hover:text-gray-600 dark:hover:text-gray-300 transition-colors cursor-default">Terms of Service</span>
                 </div>
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center mb-4 group-hover:bg-[#FF6600] group-hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2 font-heading">Pembayaran Praktis</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">Dukungan upload bukti bayar atau konfirmasi langsung dengan verifikasi instant.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center mb-4 group-hover:bg-[#FF6600] group-hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2 font-heading">Standar Internasional</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">Karpet rumput sintetis resmi World Padel Tour dan pencahayaan LED anti-glare.</p>
-                </div>
-                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-[#0052CC]/10 text-[#0052CC] flex items-center justify-center mb-4 group-hover:bg-[#FF6600] group-hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2 font-heading">Komunitas Ramah</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">Bergabung bersama ribuan pemain dari pemula hingga profesional di kota Anda.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- Footer --}}
-    <footer class="bg-[#003B99] text-white py-12 px-6 border-t border-[#0052CC]">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
-            <div class="flex items-center gap-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6600] text-white font-bold">PS</span>
-                <span class="font-bold text-xl tracking-tight text-white font-heading">PadelSpot</span>
-            </div>
-            <div class="text-sm text-white/80">
-                © {{ date('Y') }} PadelSpot. Electric Court Blue & Neon Orange Identity.
             </div>
         </div>
     </footer>
 
-    {{-- Interactive Form Script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const durationSelect = document.getElementById('durationSelect');
-            const courtTypeSelect = document.getElementById('courtTypeSelect');
-            const priceBadge = document.getElementById('priceBadge');
-            const availabilityBadge = document.getElementById('availabilityBadge');
-
-            function updatePricing() {
-                const duration = parseInt(durationSelect.value) || 60;
-                const baseRate = courtTypeSelect.value === 'pro' ? 200000 : 150000;
-                const totalPrice = (baseRate * (duration / 60)).toLocaleString('id-ID');
-                priceBadge.textContent = `Rp ${totalPrice}`;
-
-                if (courtTypeSelect.value === 'indoor') {
-                    availabilityBadge.textContent = '2 Lapangan Tersedia';
-                } else if (courtTypeSelect.value === 'outdoor') {
-                    availabilityBadge.textContent = '3 Lapangan Tersedia';
-                } else {
-                    availabilityBadge.textContent = '4 Lapangan Tersedia';
-                }
+            const btn  = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (btn && menu) {
+                btn.addEventListener('click', () => menu.classList.toggle('hidden'));
             }
-
-            durationSelect.addEventListener('change', updatePricing);
-            courtTypeSelect.addEventListener('change', updatePricing);
         });
     </script>
+
 </body>
 </html>

@@ -1,56 +1,75 @@
 <x-layouts::auth :title="__('Masuk')">
     <div class="flex flex-col gap-6">
-        <div class="flex flex-col text-center space-y-1">
-            <h2 class="text-2xl font-extrabold text-[#0052CC] font-heading">Selamat Datang Kembali</h2>
-            <p class="text-sm text-slate-600 font-medium">Masuk ke akun PadelSpot Anda untuk kelola booking</p>
+        {{-- Header --}}
+        <div class="flex flex-col text-center space-y-1.5">
+            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white font-heading">Selamat Datang Kembali</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Masuk ke akun PadelSpot Anda</p>
         </div>
 
-        <x-auth-session-status class="text-center" :status="session('status')" />
+        <x-auth-session-status class="text-center text-sm text-court-green" :status="session('status')" />
 
         <x-passkey-verify />
 
-        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-5">
+        <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-4">
             @csrf
 
-            <flux:input
-                name="email"
-                :label="__('Alamat Email')"
-                :value="old('email')"
-                type="email"
-                required
-                autofocus
-                autocomplete="email"
-                placeholder="nama@email.com"
-            />
-
-            <div class="relative">
-                <flux:input
-                    name="password"
-                    :label="__('Kata Sandi')"
-                    type="password"
+            {{-- Email --}}
+            <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Alamat Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ old('email') }}"
                     required
-                    autocomplete="current-password"
-                    :placeholder="__('Kata Sandi')"
-                    viewable
-                />
-
-                @if (Route::has('password.request'))
-                    <a class="absolute top-0 right-0 text-xs font-semibold text-[#0052CC] hover:underline" href="{{ route('password.request') }}" wire:navigate>
-                        Lupa kata sandi?
-                    </a>
-                @endif
+                    autofocus
+                    autocomplete="email"
+                    placeholder="nama@email.com"
+                    class="input-flat rounded-xl px-4 py-3 text-sm"
+                >
+                @error('email')
+                    <p class="text-xs text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
-            <flux:checkbox name="remember" :label="__('Ingat saya')" :checked="old('remember')" />
+            {{-- Password --}}
+            <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between">
+                    <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kata Sandi</label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" wire:navigate class="text-xs font-semibold text-court-blue hover:text-court-blue-dark dark:hover:text-ball-yellow transition-colors">
+                            Lupa kata sandi?
+                        </a>
+                    @endif
+                </div>
+                <input
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    placeholder="Kata Sandi"
+                    class="input-flat rounded-xl px-4 py-3 text-sm"
+                >
+                @error('password')
+                    <p class="text-xs text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-            <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#E55C00] active:scale-[0.98] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-orange-500/30 transition-all text-center cursor-pointer font-heading text-base mt-2" data-test="login-button">
+            {{-- Remember --}}
+            <label class="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-court-blue focus:ring-court-blue">
+                <span class="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">Ingat saya</span>
+            </label>
+
+            <button type="submit"
+                class="w-full bg-court-blue hover:bg-court-blue-dark text-white font-bold py-3.5 px-6 rounded-xl transition-all text-center cursor-pointer font-heading text-sm mt-1"
+                data-test="login-button">
                 Masuk ke Akun
             </button>
         </form>
 
-        <div class="text-sm text-center text-slate-600 font-medium">
-            <span>Belum memiliki akun?</span>
-            <a href="{{ route('register') }}" class="font-bold text-[#FF6600] hover:underline ml-1" wire:navigate>Daftar sekarang</a>
+        <div class="text-sm text-center text-gray-500 dark:text-gray-400">
+            Belum punya akun?
+            <a href="{{ route('register') }}" wire:navigate class="font-bold text-court-blue hover:text-court-blue-dark dark:hover:text-ball-yellow ml-1 transition-colors">Daftar sekarang</a>
         </div>
     </div>
 </x-layouts::auth>

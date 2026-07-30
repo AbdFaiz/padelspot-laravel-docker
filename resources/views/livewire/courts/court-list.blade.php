@@ -1,130 +1,140 @@
-<div class="p-6 bg-[#F4F6F9] min-h-screen">
-    <div class="mb-8 flex items-center justify-between">
+<div class="page-bg p-6 lg:p-8">
+
+    {{-- Page Header --}}
+    <div class="mb-8 flex items-start justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-[#0052CC] font-heading">Daftar Lapangan Padel</h1>
-            <p class="text-slate-600 mt-1">Pilih lapangan favorit Anda dan langsung lakukan reservasi online</p>
+            <p class="text-xs font-bold text-court-blue uppercase tracking-widest mb-1">Fasilitas</p>
+            <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white font-heading">Daftar Lapangan Padel</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Pilih lapangan favorit Anda dan langsung lakukan reservasi online</p>
         </div>
 
         @if (auth()->check() && auth()->user()->isAdmin())
-            <div>
-                <a href="{{ route('courts.create') }}" class="bg-[#FF6600] hover:bg-[#E55C00] text-white font-bold px-5 py-2.5 rounded-xl shadow-md shadow-orange-500/30 transition-all inline-flex items-center gap-2 font-heading" wire:navigate>
-                    <span>+ Tambah Lapangan</span>
-                </a>
-            </div>
+            <a href="{{ route('courts.create') }}" wire:navigate
+                class="shrink-0 flex items-center gap-2 bg-court-blue hover:bg-court-blue-dark text-white font-bold px-5 py-2.5 rounded-xl transition-all text-sm font-heading">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Tambah Lapangan
+            </a>
         @endif
     </div>
 
     {{-- Filter Bar --}}
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mb-8">
+    <div class="card-flat p-5 mb-8">
         <div class="flex flex-wrap items-end gap-4">
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Cari Lapangan</label>
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Nama atau deskripsi lapangan..."
-                    class="w-full rounded-xl border-slate-300 focus:border-[#FF6600] focus:ring-2 focus:ring-[#FF6600]/30 text-sm py-2.5 px-4">
+                <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Cari Lapangan</label>
+                <input type="text" wire:model.live.debounce.300ms="search"
+                    placeholder="Nama atau deskripsi lapangan..."
+                    class="input-flat">
             </div>
             <div class="w-36">
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga Min</label>
-                <input type="number" wire:model.live.debounce.500ms="minPrice" placeholder="0" min="0"
-                    class="w-full rounded-xl border-slate-300 focus:border-[#FF6600] focus:ring-2 focus:ring-[#FF6600]/30 text-sm py-2.5 px-4">
+                <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Harga Min</label>
+                <input type="number" wire:model.live.debounce.500ms="minPrice" placeholder="0" min="0" class="input-flat">
             </div>
             <div class="w-36">
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Harga Max</label>
-                <input type="number" wire:model.live.debounce.500ms="maxPrice" placeholder="∞" min="0"
-                    class="w-full rounded-xl border-slate-300 focus:border-[#FF6600] focus:ring-2 focus:ring-[#FF6600]/30 text-sm py-2.5 px-4">
+                <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Harga Max</label>
+                <input type="number" wire:model.live.debounce.500ms="maxPrice" placeholder="∞" min="0" class="input-flat">
             </div>
             <div class="w-44">
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Status</label>
-                <select wire:model.live="statusFilter" class="w-full rounded-xl border-slate-300 focus:border-[#FF6600] focus:ring-2 focus:ring-[#FF6600]/30 text-sm py-2.5 px-4">
+                <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Status</label>
+                <select wire:model.live="statusFilter" class="input-flat">
                     <option value="">Semua Status</option>
                     <option value="available">Tersedia</option>
                     <option value="maintenance">Maintenance</option>
                 </select>
             </div>
             @if ($search !== '' || $minPrice !== null || $maxPrice !== null || $statusFilter !== '')
-                <button wire:click="resetFilters" class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 border border-slate-300 rounded-xl hover:bg-slate-100 transition-all cursor-pointer">
+                <button wire:click="resetFilters"
+                    class="px-4 py-2.5 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-gray-200 dark:border-slate-dark hover:border-gray-300 dark:hover:border-gray-600 rounded-xl transition-all cursor-pointer">
                     Reset Filter
                 </button>
             @endif
         </div>
     </div>
 
+    {{-- Courts Grid --}}
     @if ($courts->count())
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($courts as $court)
-            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
-                <div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($courts as $court)
+                <div class="card-flat overflow-hidden flex flex-col group">
+                    {{-- Court Image --}}
                     @php $primaryImage = $court->images->where('is_primary', true)->first() ?? $court->images->first(); @endphp
-                    <div class="aspect-video bg-slate-100 flex items-center justify-center overflow-hidden relative">
+                    <div class="aspect-video relative overflow-hidden">
                         @if ($primaryImage)
-                            <img src="{{ Storage::url($primaryImage->image_path) }}" alt="{{ $court->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <img src="{{ Storage::url($primaryImage->image_path) }}"
+                                alt="{{ $court->name }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-[#0052CC] to-[#003B99] flex items-center justify-center text-white">
-                                <span class="text-5xl">🏓</span>
+                            <div class="w-full h-full flex items-center justify-center"
+                                class="bg-gradient-to-br from-court-blue-dark to-court-blue">
+                                <svg class="w-12 h-12 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </div>
                         @endif
+
+                        {{-- Overlay gradient --}}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+
+                        {{-- Status badge --}}
                         <div class="absolute top-3 right-3">
                             @if ($court->status === 'available')
-                                <span class="px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full shadow-md">Tersedia</span>
+                                <span class="badge-available px-2.5 py-1 text-xs font-bold rounded-full">Tersedia</span>
                             @else
-                                <span class="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full shadow-md">Maintenance</span>
+                                <span class="badge-maintenance px-2.5 py-1 text-xs font-bold rounded-full">Maintenance</span>
                             @endif
                         </div>
                     </div>
 
-                    <div class="p-6">
-                        <h3 class="font-bold text-xl text-slate-900 mb-2 font-heading group-hover:text-[#0052CC] transition-colors">{{ $court->name }}</h3>
+                    {{-- Court Info --}}
+                    <div class="p-6 flex flex-col flex-1">
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2 font-heading group-hover:text-court-blue transition-colors">{{ $court->name }}</h3>
 
                         @if ($court->description)
-                            <p class="text-sm text-slate-600 mb-4 line-clamp-2">{{ $court->description }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2 flex-1">{{ $court->description }}</p>
+                        @else
+                            <div class="flex-1"></div>
                         @endif
 
-                        <div class="flex items-center gap-1 mb-4">
+                        {{-- Rating --}}
+                        <div class="flex items-center gap-1 mb-5">
                             @for ($i = 1; $i <= 5; $i++)
-                                @if ($i <= $court->average_rating)
-                                    <span class="text-[#FF6600] text-lg">★</span>
-                                @else
-                                    <span class="text-slate-300 text-lg">★</span>
-                                @endif
+                                <span class="{{ $i <= $court->average_rating ? 'text-[var(--color-accent)]' : 'text-gray-200 dark:text-gray-600' }} text-base">★</span>
                             @endfor
-                            <span class="text-xs font-medium text-slate-500 ml-1">({{ $court->reviews_count ?? $court->reviews->count() }} ulasan)</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500 ml-1.5">({{ $court->reviews_count ?? $court->reviews->count() }} ulasan)</span>
                         </div>
-                    </div>
-                </div>
 
-                <div class="p-6 pt-0">
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                        <div>
-                            <span class="text-xs text-slate-500 block">Tarif per jam</span>
-                            <span class="text-xl font-extrabold text-[#FF6600]">Rp {{ number_format($court->price_per_hour, 0, ',', '.') }}</span>
-                        </div>
-                        <a href="{{ route('courts.show', $court->id) }}" class="bg-[#0052CC] hover:bg-[#003B99] text-white font-bold px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all text-sm font-heading" wire:navigate>
-                            Lihat Detail
-                        </a>
-                    </div>
-
-                    @if (auth()->check() && auth()->user()->isAdmin())
-                        <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-slate-100 text-xs">
-                            <a href="{{ route('courts.edit', $court->id) }}" class="text-slate-600 hover:text-[#0052CC] font-semibold" wire:navigate>
-                                Edit Lapangan
+                        {{-- Price & CTA --}}
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-slate-dark">
+                            <div>
+                                <span class="text-xs text-gray-400 dark:text-gray-500 block">Tarif per jam</span>
+                                <span class="text-xl font-extrabold text-[var(--color-accent)] font-heading">Rp {{ number_format($court->price_per_hour, 0, ',', '.') }}</span>
+                            </div>
+                            <a href="{{ route('courts.show', $court->id) }}" wire:navigate
+                                class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-4 py-2.5 rounded-xl text-sm font-heading">
+                                Lihat Detail
                             </a>
-                            <form method="POST" action="{{ route('courts.destroy', $court->id) }}" onsubmit="return confirm('Yakin hapus lapangan ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 font-semibold cursor-pointer">Hapus</button>
-                            </form>
                         </div>
-                    @endif
+
+                        @if (auth()->check() && auth()->user()->isAdmin())
+                            <div class="flex items-center gap-4 mt-4 pt-3 border-t border-gray-200 dark:border-slate-dark">
+                                <a href="{{ route('courts.edit', $court->id) }}" wire:navigate class="text-xs font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white transition-colors">Edit Lapangan</a>
+                                <form method="POST" action="{{ route('courts.destroy', $court->id) }}" onsubmit="return confirm('Yakin hapus lapangan ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-xs font-semibold text-red-400 hover:text-red-300 transition-colors cursor-pointer">Hapus</button>
+                                </form>
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
     @else
-        <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm">
-            <div class="text-4xl mb-3">🏸</div>
-            <p class="text-slate-600 font-medium mb-4">Tidak ada lapangan yang sesuai dengan filter Anda.</p>
+        <div class="card-flat p-12 text-center">
+            <svg class="w-12 h-12 mx-auto mb-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <p class="text-gray-400 dark:text-gray-500 font-medium mb-4">Tidak ada lapangan yang sesuai dengan filter Anda.</p>
             @if ($search !== '' || $minPrice !== null || $maxPrice !== null || $statusFilter !== '')
-                <button wire:click="resetFilters" class="text-sm font-bold text-[#FF6600] hover:underline cursor-pointer">Reset Semua Filter</button>
+                <button wire:click="resetFilters" class="text-sm font-bold text-court-blue hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer">Reset Semua Filter</button>
             @endif
         </div>
     @endif
+
 </div>

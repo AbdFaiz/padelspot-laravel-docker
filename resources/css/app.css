@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
 
@@ -10,33 +10,33 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Outfit', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Archivo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-    /* Theme Color System */
-    --color-court-blue: #0052CC;
-    --color-court-blue-dark: #003B99;
-    --color-court-blue-deep: #002666;
-    --color-neon-orange: #FF6600;
-    --color-neon-orange-hover: #E55C00;
-    --color-light-gray: #F4F6F9;
-    --color-bright-white: #FFFFFF;
+    --color-court-blue: #0057B3;
+    --color-court-blue-dark: #003D7A;
+    --color-court-blue-light: #E8F0FE;
+    --color-ball-yellow: #D4FF00;
+    --color-court-green: #00A86B;
+    --color-sand: #F8F7F4;
+    --color-midnight: #0F172A;
+    --color-slate-dark: #1E293B;
 
-    --color-accent: #FF6600;
-    --color-accent-content: #FF6600;
+    --color-accent: #0057B3;
+    --color-accent-content: #0057B3;
     --color-accent-foreground: #FFFFFF;
 }
 
 @layer theme {
     .dark {
-        --color-accent: #FF6600;
-        --color-accent-content: #FF6600;
-        --color-accent-foreground: #FFFFFF;
+        --color-accent: #D4FF00;
+        --color-accent-content: #D4FF00;
+        --color-accent-foreground: #0F172A;
     }
 }
 
 @layer base {
-
     *,
     ::after,
     ::before,
@@ -47,8 +47,13 @@
 
     body {
         font-family: var(--font-sans);
-        background-color: #F4F6F9;
-        color: #0f172a;
+        background-color: #F8F7F4;
+        color: #111827;
+    }
+
+    .dark body, body.dark {
+        background-color: #0F172A;
+        color: #F1F5F9;
     }
 
     h1, h2, h3, .font-heading {
@@ -56,115 +61,538 @@
     }
 }
 
-/* Glassmorphism & Color Theme System Utilities */
-.glass-header {
-    background: rgba(0, 82, 204, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+/* ═══════════════════════════════════════════
+   FLAT DESIGN SYSTEM — Page & Cards
+════════════════════════════════════════════ */
+
+.page-bg {
+    background: #F8F7F4;
+    min-height: 100vh;
 }
 
-.glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+.dark .page-bg {
+    background: #0F172A;
 }
 
-.glass-input {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: #ffffff;
-    transition: all 0.25s ease;
+.card-flat {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 1rem;
+    transition: border-color 0.2s ease;
 }
 
-.glass-input:focus {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: #FF6600;
-    box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
+.dark .card-flat {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+.card-flat:hover {
+    border-color: #0057B3;
+}
+
+.dark .card-flat:hover {
+    border-color: rgba(212, 255, 0, 0.4);
+}
+
+.card-flat-solid {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 1rem;
+}
+
+.dark .card-flat-solid {
+    background: #0F172A;
+    border-color: #1E293B;
+}
+
+/* Table styles */
+.table-header-flat {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.dark .table-header-flat {
+    background: rgba(15, 23, 42, 0.9);
+    border-bottom: 1px solid #334155;
+}
+
+.table-row-flat {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background-color 0.15s ease;
+}
+
+.dark .table-row-flat {
+    border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+}
+
+.table-row-flat:hover {
+    background: rgba(0, 87, 179, 0.04);
+}
+
+.dark .table-row-flat:hover {
+    background: rgba(212, 255, 0, 0.04);
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION — Flat header & sidebar
+════════════════════════════════════════════ */
+
+.header-flat {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.dark .header-flat {
+    background: #0F172A;
+    border-bottom: 1px solid #1E293B;
+}
+
+.pill-flat {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+}
+
+.dark .pill-flat {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: #334155;
+}
+
+/* ═══════════════════════════════════════════
+   STATUS BADGES — Flat
+════════════════════════════════════════════ */
+
+.badge-pending {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #F59E0B;
+}
+
+.dark .badge-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge-confirmed {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #10B981;
+}
+
+.dark .badge-confirmed {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-cancelled {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #EF4444;
+}
+
+.dark .badge-cancelled {
+    background: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.badge-completed {
+    background: #DBEAFE;
+    color: #1E40AF;
+    border: 1px solid #3B82F6;
+}
+
+.dark .badge-completed {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.badge-available {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #10B981;
+}
+
+.dark .badge-available {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.badge-maintenance {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #F59E0B;
+}
+
+.dark .badge-maintenance {
+    background: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge-paid {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #10B981;
+}
+
+.dark .badge-paid {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ADE80;
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+.badge-dp {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #F59E0B;
+}
+
+.dark .badge-dp {
+    background: rgba(232, 212, 77, 0.15);
+    color: #E8D44D;
+    border-color: rgba(232, 212, 77, 0.3);
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS — Flat, no shadows
+════════════════════════════════════════════ */
+
+.btn-primary {
+    background: #0057B3;
+    color: #FFFFFF;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.15s ease;
+    font-family: var(--font-display);
+}
+
+.btn-primary:hover {
+    background: #003D7A;
+}
+
+.dark .btn-primary {
+    background: #D4FF00;
+    color: #0F172A;
+}
+
+.dark .btn-primary:hover {
+    background: #C0E600;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #0057B3;
+    border: 1px solid #0057B3;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+    background: #E8F0FE;
+}
+
+.dark .btn-secondary {
+    color: #D4FF00;
+    border-color: #D4FF00;
+}
+
+.dark .btn-secondary:hover {
+    background: rgba(212, 255, 0, 0.1);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #64748B;
+    border: 1px solid #E2E8F0;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.15s ease;
+}
+
+.btn-ghost:hover {
+    background: #F1F5F9;
+    color: #111827;
+}
+
+.dark .btn-ghost {
+    color: #94A3B8;
+    border-color: #334155;
+}
+
+.dark .btn-ghost:hover {
+    background: rgba(51, 65, 85, 0.5);
+    color: #F1F5F9;
+}
+
+/* ═══════════════════════════════════════════
+   FORM INPUTS — Flat style
+════════════════════════════════════════════ */
+
+.input-flat {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    color: #111827;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+    width: 100%;
+}
+
+.input-flat::placeholder {
+    color: #94A3B8;
+}
+
+.input-flat:focus {
     outline: none;
+    border-color: #0057B3;
+    box-shadow: 0 0 0 3px rgba(0, 87, 179, 0.1);
 }
 
-.glass-input option {
-    background-color: #003B99;
-    color: #ffffff;
+.dark .input-flat {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: #334155;
+    color: #F1F5F9;
 }
 
-.glass-button {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.dark .input-flat::placeholder {
+    color: #64748B;
 }
 
-.glass-button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #FF6600;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+.dark .input-flat:focus {
+    border-color: #D4FF00;
+    box-shadow: 0 0 0 3px rgba(212, 255, 0, 0.1);
 }
 
-.glass-pill {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+.input-flat option {
+    background: #FFFFFF;
+    color: #111827;
 }
 
-/* Theme Helper Classes */
-.bg-court-blue {
-    background-color: #0052CC;
+.dark .input-flat option {
+    background: #1E293B;
+    color: #F1F5F9;
 }
 
-.bg-court-blue-dark {
-    background-color: #003B99;
+/* File upload area */
+.upload-flat {
+    background: #F8FAFC;
+    border: 2px dashed #E2E8F0;
+    border-radius: 1rem;
+    transition: all 0.15s ease;
+    cursor: pointer;
 }
 
-.bg-neon-orange {
-    background-color: #FF6600;
+.upload-flat:hover {
+    background: #F1F5F9;
+    border-color: #0057B3;
 }
 
-.hover\:bg-neon-orange-hover:hover {
-    background-color: #E55C00;
+.dark .upload-flat {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: #334155;
 }
 
-.text-neon-orange {
-    color: #FF6600;
+.dark .upload-flat:hover {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: #D4FF00;
 }
 
-.text-court-blue {
-    color: #0052CC;
+/* Option card (radio/checkbox) */
+.option-flat {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    transition: all 0.15s ease;
+    cursor: pointer;
 }
 
-.border-neon-orange {
-    border-color: #FF6600;
+.option-flat:hover {
+    background: #E8F0FE;
+    border-color: #0057B3;
 }
 
-.border-court-blue {
-    border-color: #0052CC;
+.dark .option-flat {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: #334155;
 }
 
-.bg-light-gray {
-    background-color: #F4F6F9;
+.dark .option-flat:hover {
+    background: rgba(212, 255, 0, 0.05);
+    border-color: rgba(212, 255, 0, 0.3);
 }
+
+.option-flat-active {
+    background: #E8F0FE;
+    border-color: #0057B3;
+}
+
+.dark .option-flat-active {
+    background: rgba(212, 255, 0, 0.1);
+    border-color: #D4FF00;
+}
+
+/* Toggle pill */
+.toggle-flat {
+    background: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+}
+
+.dark .toggle-flat {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: #334155;
+}
+
+.toggle-flat-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: all 0.15s ease;
+    color: #64748B;
+    cursor: pointer;
+}
+
+.toggle-flat-btn-active {
+    background: #0057B3;
+    color: #FFFFFF;
+}
+
+.dark .toggle-flat-btn-active {
+    background: #D4FF00;
+    color: #0F172A;
+}
+
+/* ═══════════════════════════════════════════
+   FLUX UI OVERRIDES
+════════════════════════════════════════════ */
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-[#FF6600] ring-offset-2 ring-offset-white;
+    outline: none;
 }
 
+/* Make Flux sidebar items respond to accent color */
+[data-flux-sidebar] {
+    --sidebar-active-bg: var(--color-accent);
+    --sidebar-active-text: var(--color-accent-foreground);
+}
 
+/* ═══════════════════════════════════════════
+   TIME SLOT GRID
+════════════════════════════════════════════ */
+
+.slot-btn {
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.dark .slot-btn {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: #334155;
+    color: #94A3B8;
+}
+
+.slot-btn:hover:not(:disabled) {
+    background: #E8F0FE;
+    border-color: #0057B3;
+}
+
+.dark .slot-btn:hover:not(:disabled) {
+    background: rgba(212, 255, 0, 0.05);
+    border-color: rgba(212, 255, 0, 0.3);
+}
+
+.slot-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.slot-btn-selected {
+    background: rgba(0, 87, 179, 0.08);
+    border-color: #0057B3;
+    color: #0057B3;
+}
+
+.dark .slot-btn-selected {
+    background: rgba(212, 255, 0, 0.12);
+    border-color: #D4FF00;
+    color: #D4FF00;
+}
+
+.slot-btn-booked {
+    background: #FEE2E2;
+    border-color: rgba(239, 68, 68, 0.3);
+    color: rgba(239, 68, 68, 0.6);
+}
+
+.dark .slot-btn-booked {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: rgba(239, 68, 68, 0.6);
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════════════ */
+
+@keyframes float-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.animate-float-up {
+    animation: float-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease forwards;
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 0.1s; opacity: 0; }
+.delay-200 { animation-delay: 0.2s; opacity: 0; }
+.delay-300 { animation-delay: 0.3s; opacity: 0; }
+.delay-400 { animation-delay: 0.4s; opacity: 0; }
+.delay-500 { animation-delay: 0.5s; opacity: 0; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .animate-float-up,
+    .animate-fade-in {
+        animation: none;
+        opacity: 1;
+    }
+}

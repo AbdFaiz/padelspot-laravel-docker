@@ -1,99 +1,108 @@
-<div class="p-6 bg-[#F4F6F9] min-h-screen">
+<div class="page-bg p-6 lg:p-8">
+
+    {{-- Back Button --}}
     <div class="mb-6">
-        <a href="{{ route('bookings.index') }}" class="text-sm font-semibold text-[#0052CC] hover:underline inline-flex items-center gap-1" wire:navigate>
+        <a href="{{ route('bookings.index') }}" wire:navigate
+            class="text-sm font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1.5 transition-colors">
             ← Kembali ke Booking Saya
         </a>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         {{-- Main Detail Card --}}
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-                <div class="flex items-start justify-between mb-6">
-                    <h1 class="text-2xl font-extrabold text-[#0052CC] font-heading">Detail Booking</h1>
+            <div class="card-flat p-6 sm:p-8">
+                <div class="flex items-start justify-between mb-6 pb-6 border-b border-gray-200 dark:border-slate-dark">
+                    <div>
+                        <p class="text-xs font-bold text-court-blue uppercase tracking-widest mb-1">Kode Booking #{{ $booking->id }}</p>
+                        <h1 class="text-2xl font-extrabold text-gray-900 dark:text-white font-heading">Detail Pemesanan</h1>
+                    </div>
+
                     @if ($booking->status === 'pending')
-                        <span class="px-4 py-1.5 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">Menunggu Pembayaran</span>
+                        <span class="badge-pending px-3.5 py-1.5 text-xs font-bold rounded-full">Menunggu Pembayaran</span>
                     @elseif ($booking->status === 'confirmed')
-                        <span class="px-4 py-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">✓ Dikonfirmasi</span>
+                        <span class="badge-confirmed px-3.5 py-1.5 text-xs font-bold rounded-full">✓ Dikonfirmasi</span>
                     @elseif ($booking->status === 'cancelled')
-                        <span class="px-4 py-1.5 bg-red-100 text-red-800 text-xs font-bold rounded-full">Dibatalkan</span>
+                        <span class="badge-cancelled px-3.5 py-1.5 text-xs font-bold rounded-full">Dibatalkan</span>
                     @elseif ($booking->status === 'completed')
-                        <span class="px-4 py-1.5 bg-[#0052CC]/15 text-[#0052CC] text-xs font-bold rounded-full">Selesai</span>
+                        <span class="badge-completed px-3.5 py-1.5 text-xs font-bold rounded-full">Selesai</span>
                     @endif
                 </div>
 
-                <div class="grid grid-cols-2 gap-5 mb-6">
-                    <div class="bg-[#F4F6F9] rounded-xl p-4">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Lapangan</p>
-                        <p class="font-bold text-slate-900">{{ $booking->court->name }}</p>
+                {{-- Detail Grid --}}
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Lapangan</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-base">{{ $booking->court->name }}</p>
                     </div>
-                    <div class="bg-[#F4F6F9] rounded-xl p-4">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Tanggal</p>
-                        <p class="font-bold text-slate-900">{{ $booking->booking_date->format('d M Y') }}</p>
+                    <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Tanggal</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-base">{{ $booking->booking_date->format('d M Y') }}</p>
                     </div>
-                    <div class="bg-[#F4F6F9] rounded-xl p-4">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Jam</p>
-                        <p class="font-bold text-slate-900">{{ $booking->timeSlot->label }}</p>
+                    <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Jam</p>
+                        <p class="font-bold text-gray-900 dark:text-white text-base">{{ $booking->timeSlot->label }}</p>
                     </div>
-                    <div class="bg-[#FF6600]/8 rounded-xl p-4 border border-[#FF6600]/20">
-                        <p class="text-xs font-bold text-[#FF6600] uppercase tracking-wider mb-1">Total Harga</p>
-                        <p class="font-extrabold text-[#FF6600] text-lg font-heading">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
+                    <div class="bg-[var(--color-accent)]/10 rounded-xl p-4 border border-[var(--color-accent)]/25">
+                        <p class="text-[10px] font-bold text-[var(--color-accent)] uppercase tracking-wider mb-1">Total Harga</p>
+                        <p class="font-extrabold text-[var(--color-accent)] text-lg font-heading">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</p>
                     </div>
                 </div>
 
                 @if ($booking->notes)
-                    <div class="mb-6 p-4 bg-[#F4F6F9] rounded-xl border border-slate-200">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Catatan</p>
-                        <p class="text-slate-700 text-sm">{{ $booking->notes }}</p>
+                    <div class="mb-6 p-4 bg-gray-50 dark:bg-slate-dark/50 rounded-xl border border-gray-200 dark:border-slate-dark">
+                        <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Catatan</p>
+                        <p class="text-gray-700 dark:text-gray-300 text-sm">{{ $booking->notes }}</p>
                     </div>
                 @endif
 
                 {{-- Payment Info --}}
                 @if ($booking->payment)
-                    <div class="border-t border-slate-100 pt-6 mb-6">
-                        <h3 class="font-bold text-slate-900 font-heading mb-4">Informasi Pembayaran</h3>
+                    <div class="border-t border-gray-200 dark:border-slate-dark pt-6 mb-6">
+                        <h3 class="font-bold text-gray-900 dark:text-white font-heading text-base mb-4">Informasi Pembayaran</h3>
                         <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Metode</p>
-                                <p class="font-bold text-slate-900">{{ $booking->payment->paymentMethod->name }}</p>
+                            <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                                <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Metode</p>
+                                <p class="font-bold text-gray-900 dark:text-white">{{ $booking->payment->paymentMethod->name }}</p>
                             </div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Status Pembayaran</p>
+                            <div class="bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                                <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Status Pembayaran</p>
                                 @if ($booking->payment->status === 'pending')
-                                    <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">Menunggu Verifikasi</span>
+                                    <span class="badge-pending px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">Menunggu Verifikasi</span>
                                 @elseif ($booking->payment->status === 'verified')
-                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">✓ Terverifikasi</span>
+                                    <span class="badge-confirmed px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">✓ Terverifikasi</span>
                                 @else
-                                    <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">Ditolak</span>
+                                    <span class="badge-cancelled px-2.5 py-1 text-xs font-bold rounded-full inline-block mt-0.5">Ditolak</span>
                                 @endif
                             </div>
                             @if ($booking->payment->admin_notes)
-                                <div class="col-span-2">
-                                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Catatan Admin</p>
-                                    <p class="text-slate-700">{{ $booking->payment->admin_notes }}</p>
+                                <div class="col-span-2 bg-gray-50 dark:bg-slate-dark/50 rounded-xl p-4 border border-gray-200 dark:border-slate-dark">
+                                    <p class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Catatan Admin</p>
+                                    <p class="text-gray-700 dark:text-gray-300 text-sm">{{ $booking->payment->admin_notes }}</p>
                                 </div>
                             @endif
                         </div>
                     </div>
                 @endif
 
-                {{-- Status Log --}}
-                <div class="border-t border-slate-100 pt-6">
-                    <h3 class="font-bold text-slate-900 font-heading mb-4">Riwayat Status</h3>
+                {{-- Status Log Timeline --}}
+                <div class="border-t border-gray-200 dark:border-slate-dark pt-6">
+                    <h3 class="font-bold text-gray-900 dark:text-white font-heading text-base mb-4">Riwayat Status</h3>
                     <div class="space-y-4">
                         @foreach ($booking->statusLogs->sortByDesc('created_at') as $log)
                             <div class="flex items-start gap-3">
-                                <div class="w-2.5 h-2.5 rounded-full bg-[#FF6600] mt-1.5 shrink-0"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-court-blue mt-1.5 shrink-0 "></div>
                                 <div>
-                                    <p class="text-sm text-slate-900 font-semibold">
-                                        <span>{{ $log->old_status }}</span>
-                                        <span class="text-slate-400 mx-1">→</span>
-                                        <span class="text-[#0052CC]">{{ $log->new_status }}</span>
+                                    <p class="text-sm text-gray-900 dark:text-white font-semibold">
+                                        <span class="text-gray-500 dark:text-gray-400">{{ $log->old_status }}</span>
+                                        <span class="text-gray-400 dark:text-gray-500 mx-1.5">→</span>
+                                        <span class="text-court-blue">{{ $log->new_status }}</span>
                                     </p>
                                     @if ($log->notes)
-                                        <p class="text-xs text-slate-500 mt-0.5">{{ $log->notes }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $log->notes }}</p>
                                     @endif
-                                    <p class="text-xs text-slate-400 mt-0.5">{{ $log->created_at->diffForHumans() }}</p>
+                                    <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">{{ $log->created_at->diffForHumans() }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -104,26 +113,39 @@
 
         {{-- Sidebar Actions --}}
         <div>
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-6 space-y-3">
-                <h3 class="font-bold text-slate-900 font-heading text-sm uppercase tracking-wide text-slate-500 mb-2">Aksi Booking</h3>
+            <div class="card-flat p-6 sticky top-6 space-y-3">
+                <h3 class="font-bold text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider mb-3">Aksi Booking</h3>
 
                 @if ($booking->status === 'pending' && !$booking->payment)
-                    <a href="{{ route('payments.create', $booking->id) }}" class="w-full bg-[#FF6600] hover:bg-[#E55C00] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 text-center block text-sm font-heading transition-all" wire:navigate>
+                    <a href="{{ route('payments.create', $booking->id) }}" wire:navigate
+                        class="w-full bg-[var(--color-accent)] hover:opacity-90 text-white font-bold py-3.5 px-6 rounded-xl transition-all text-center block font-heading text-sm">
+                        <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         Bayar Sekarang
                     </a>
                 @endif
 
                 @if (in_array($booking->status, ['pending', 'confirmed']))
                     <button wire:click="cancel" onclick="return confirm('Yakin ingin membatalkan booking ini?')"
-                        class="w-full px-4 py-3 border border-red-300 text-red-600 rounded-xl hover:bg-red-50 text-center text-sm font-semibold transition-all cursor-pointer">
+                        class="w-full px-4 py-3 border border-red-500/40 text-red-400 hover:bg-red-500/10 rounded-xl text-center text-sm font-semibold transition-all cursor-pointer flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         Batalkan Booking
                     </button>
                 @endif
 
-                <a href="{{ route('courts.show', $booking->court->id) }}" class="w-full block text-center text-sm font-semibold text-[#0052CC] hover:underline py-2" wire:navigate>
-                    Lihat Detail Lapangan →
-                </a>
+                <div class="pt-2 border-t border-gray-200 dark:border-slate-dark">
+                    <a href="{{ route('courts.show', $booking->court->id) }}" wire:navigate
+                        class="w-full flex items-center justify-center gap-1.5 text-center text-sm font-semibold text-court-blue hover:text-gray-900 dark:hover:text-white py-2 transition-colors">
+                        Lihat Detail Lapangan
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                {{-- Booking ID Reference --}}
+                <div class="pt-3 text-center">
+                    <span class="text-[10px] text-gray-300 dark:text-gray-600 font-mono">#{{ $booking->id }}</span>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
