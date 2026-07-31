@@ -79,6 +79,10 @@
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex gap-3">
+                                    <a href="{{ route('admin.bookings.show', $booking->id) }}" wire:navigate
+                                        class="text-sm font-bold text-court-blue hover:text-gray-900 dark:hover:text-gray-900 dark:hover:text-white transition-colors">
+                                        Detail
+                                    </a>
                                     @if ($booking->status === BookingStatus::Pending)
                                         <button wire:click="confirm({{ $booking->id }})" onclick="return confirm('Konfirmasi booking ini?')"
                                             class="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer">

@@ -49,6 +49,6 @@ class BookingShow extends Component
         abort_unless($booking->user_id === Auth::id(), 403);
 
         return view('livewire.bookings.booking-show', compact('booking'))
-            ->layout('components.layouts.app', ['title' => 'Detail Booking - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Detail Booking - PadelSpot']);
     }
 }

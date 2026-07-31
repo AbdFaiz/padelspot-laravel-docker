@@ -106,7 +106,7 @@ class BookingCreate extends Component
 
         foreach ($slots as $slot) {
             if ($slot->start_time < $schedule->open_time || $slot->end_time > $schedule->close_time) {
-                session()->flash('error', 'Slot '.$slot->label.' di luar jam operasional ('.$schedule->open_time.' - '.$schedule->close_time.').');
+                session()->flash('error', 'Slot ' . $slot->label . ' di luar jam operasional (' . $schedule->open_time . ' - ' . $schedule->close_time . ').');
                 return;
             }
         }
@@ -122,7 +122,7 @@ class BookingCreate extends Component
 
         if (count($existingSlotIds) > 0) {
             $bookedSlots = TimeSlot::whereIn('id', $existingSlotIds)->pluck('label')->implode(', ');
-            session()->flash('error', 'Slot berikut sudah dipesan: '.$bookedSlots.'. Silakan pilih slot lain.');
+            session()->flash('error', 'Slot berikut sudah dipesan: ' . $bookedSlots . '. Silakan pilih slot lain.');
             return;
         }
 
@@ -207,7 +207,12 @@ class BookingCreate extends Component
         ] : null;
 
         return view('livewire.bookings.booking-create', compact(
-            'court', 'timeSlots', 'maxDate', 'bookedSlotIds', 'unavailableSlotIds', 'courtSchedule'
-        ))->layout('components.layouts.app', ['title' => 'Buat Booking - PadelSpot']);
+            'court',
+            'timeSlots',
+            'maxDate',
+            'bookedSlotIds',
+            'unavailableSlotIds',
+            'courtSchedule'
+        ))->layout('layouts.app', ['title' => 'Buat Booking - PadelSpot']);
     }
 }

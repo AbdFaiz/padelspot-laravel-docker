@@ -92,6 +92,6 @@ class AdminBookingList extends Component
         ")->first();
 
         return view('livewire.admin.admin-booking-list', compact('bookings', 'stats'))
-            ->layout('components.layouts.app', ['title' => 'Kelola Booking - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Kelola Booking - PadelSpot']);
     }
 }

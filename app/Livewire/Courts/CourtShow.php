@@ -67,6 +67,6 @@ class CourtShow extends Component
         $court = Court::with(['schedules', 'reviews.user', 'images'])->findOrFail($this->courtId);
 
         return view('livewire.courts.court-show', compact('court'))
-            ->layout('components.layouts.app', ['title' => $court->name.' - PadelSpot']);
+            ->layout('layouts.app', ['title' => $court->name . ' - PadelSpot']);
     }
 }

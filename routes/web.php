@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Admin\AdminBookingList;
-use App\Livewire\Admin\AdminPaymentList;
+use App\Livewire\Admin\AdminBookingShow;
 use App\Livewire\Bookings\BookingCreate;
 use App\Livewire\Bookings\BookingList;
 use App\Livewire\Bookings\BookingShow;
@@ -33,7 +33,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     })->name('courts.destroy');
 
     Route::get('admin/bookings', AdminBookingList::class)->name('admin.bookings.index');
-    Route::get('admin/payments', AdminPaymentList::class)->name('admin.payments.index');
+    Route::get('admin/bookings/{id}', AdminBookingShow::class)->name('admin.bookings.show');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

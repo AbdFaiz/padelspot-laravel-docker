@@ -39,7 +39,7 @@
                     </p>
                 </div>
                 @if (!auth()->user()->isAdmin())
-                    <a href="{{ route('bookings.create') }}" wire:navigate
+                    <a href="{{ route('courts.index') }}" wire:navigate
                         class="inline-flex items-center gap-2 bg-ball-yellow text-midnight hover:bg-ball-yellow-dark font-bold px-6 py-3 rounded-xl transition-all text-sm font-heading shrink-0 shadow-lg shadow-black/20">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
                         Booking Sekarang
@@ -309,7 +309,7 @@
                 <div class="p-12 text-center">
                     <svg class="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     <p class="text-gray-500 dark:text-gray-400 font-medium mb-5">Belum ada pemesanan terbaru.</p>
-                    <a href="{{ route('bookings.create') }}" wire:navigate
+                    <a href="{{ route('courts.index') }}" wire:navigate
                         class="inline-flex items-center gap-2 bg-court-blue hover:bg-court-blue-dark text-white font-bold px-6 py-3 rounded-xl transition-all font-heading text-sm shadow-sm shadow-court-blue/20">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Mulai Booking Sekarang!

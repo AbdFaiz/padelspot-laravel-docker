@@ -26,6 +26,6 @@ class PaymentShow extends Component
         );
 
         return view('livewire.payments.payment-show', compact('payment'))
-            ->layout('components.layouts.app', ['title' => 'Detail Pembayaran - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Detail Pembayaran - PadelSpot']);
     }
 }

@@ -130,7 +130,7 @@ class CourtForm extends Component
             }
             $image->delete();
             $this->existingImages = collect($this->existingImages)
-                ->reject(fn ($img) => $img['id'] === $imageId)
+                ->reject(fn($img) => $img['id'] === $imageId)
                 ->values()
                 ->toArray();
         }
@@ -145,7 +145,7 @@ class CourtForm extends Component
     {
         $this->validate();
 
-        $hasActiveDay = collect($this->schedules)->contains(fn ($s) => $s['is_active']);
+        $hasActiveDay = collect($this->schedules)->contains(fn($s) => $s['is_active']);
         if (! $hasActiveDay) {
             session()->flash('error', 'Minimal satu hari harus aktif.');
             return;
@@ -227,6 +227,6 @@ class CourtForm extends Component
     public function render()
     {
         return view('livewire.courts.court-form', ['dayLabels' => $this->dayLabels])
-            ->layout('components.layouts.app', ['title' => ($this->isEdit ? 'Edit' : 'Tambah').' Lapangan - PadelSpot']);
+            ->layout('layouts.app', ['title' => ($this->isEdit ? 'Edit' : 'Tambah') . ' Lapangan - PadelSpot']);
     }
 }

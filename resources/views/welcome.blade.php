@@ -244,7 +244,7 @@
                         Lihat Lapangan
                     </a>
                 @else
-                    <a href="{{ route('bookings.create') }}" wire:navigate class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-8 py-4 rounded-xl text-base font-heading transition-all">
+                    <a href="{{ route('courts.index') }}" wire:navigate class="bg-court-blue hover:bg-court-blue-dark text-white font-bold px-8 py-4 rounded-xl text-base font-heading transition-all">
                         Booking Sekarang
                     </a>
                 @endguest
@@ -252,9 +252,6 @@
         </div>
     </section>
 
-    {{-- ══════════════════════════════════════
-         FOOTER
-    ══════════════════════════════════════ --}}
     <footer class="border-t border-gray-200 dark:border-slate-dark bg-white dark:bg-midnight">
         <div class="max-w-7xl mx-auto px-4 sm:px-8 py-12">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">

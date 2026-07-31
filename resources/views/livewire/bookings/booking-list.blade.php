@@ -84,7 +84,7 @@
                                 <td class="px-6 py-4">
                                     <a href="{{ route('bookings.show', $booking->id) }}" wire:navigate
                                         class="text-sm font-bold text-court-blue hover:text-gray-900 dark:hover:text-gray-900 dark:hover:text-white transition-colors">
-                                        Detail →
+                                        Detail
                                     </a>
                                 </td>
                             </tr>

@@ -49,17 +49,6 @@ class PaymentForm extends Component
                 'payment_method_id' => $this->paymentMethodId,
                 'amount' => $booking->total_price,
                 'proof_path' => $proofPath,
-                'status' => 'pending',
-            ]);
-
-            $oldStatus = $booking->status->value;
-            $booking->update(['status' => BookingStatus::Confirmed]);
-
-            BookingStatusLog::create([
-                'booking_id' => $booking->id,
-                'old_status' => $oldStatus,
-                'new_status' => BookingStatus::Confirmed->value,
-                'notes' => 'Pembayaran diterima, booking otomatis dikonfirmasi.',
             ]);
         });
 
@@ -83,6 +72,6 @@ class PaymentForm extends Component
         $paymentMethods = PaymentMethod::where('is_active', true)->get();
 
         return view('livewire.payments.payment-form', compact('booking', 'paymentMethods'))
-            ->layout('components.layouts.app', ['title' => 'Bayar Booking - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Bayar Booking - PadelSpot']);
     }
 }

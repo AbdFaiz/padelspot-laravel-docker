@@ -32,7 +32,7 @@ class Dashboard extends Component
                 ->get();
 
             return view('livewire.dashboard', compact('stats', 'recentBookings'))
-                ->layout('components.layouts.app', ['title' => 'Dashboard Admin - PadelSpot']);
+                ->layout('layouts.app', ['title' => 'Dashboard Admin - PadelSpot']);
         }
 
         $stats = [
@@ -51,6 +51,6 @@ class Dashboard extends Component
             ->get();
 
         return view('livewire.dashboard', compact('stats', 'recentBookings'))
-            ->layout('components.layouts.app', ['title' => 'Dashboard - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Dashboard - PadelSpot']);
     }
 }

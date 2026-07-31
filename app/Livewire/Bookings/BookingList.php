@@ -28,15 +28,15 @@ class BookingList extends Component
     {
         $bookings = Booking::with(['court', 'timeSlots', 'payment.paymentMethod'])
             ->where('user_id', Auth::id())
-            ->when($this->status !== '', fn ($q) => $q->where('status', $this->status))
-            ->when($this->search !== '', fn ($q) => $q->whereHas('court', fn ($cq) => $cq->where('name', 'like', "%{$this->search}%")))
-            ->when($this->dateFrom !== '', fn ($q) => $q->where('booking_date', '>=', $this->dateFrom))
-            ->when($this->dateTo !== '', fn ($q) => $q->where('booking_date', '<=', $this->dateTo))
+            ->when($this->status !== '', fn($q) => $q->where('status', $this->status))
+            ->when($this->search !== '', fn($q) => $q->whereHas('court', fn($cq) => $cq->where('name', 'like', "%{$this->search}%")))
+            ->when($this->dateFrom !== '', fn($q) => $q->where('booking_date', '>=', $this->dateFrom))
+            ->when($this->dateTo !== '', fn($q) => $q->where('booking_date', '<=', $this->dateTo))
             ->orderByDesc('booking_date')
             ->orderByDesc('created_at')
             ->get();
 
         return view('livewire.bookings.booking-list', compact('bookings'))
-            ->layout('components.layouts.app', ['title' => 'Booking Saya - PadelSpot']);
+            ->layout('layouts.app', ['title' => 'Booking Saya - PadelSpot']);
     }
 }
